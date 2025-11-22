@@ -1,0 +1,12 @@
+[build]
+command = "flutter build web --release"
+publish = "build/web"
+
+[build.environment]
+# Specify Flutter channel and version (optional but recommended)
+FLUTTER_VERSION = "stable"
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
