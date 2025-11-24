@@ -1,6 +1,16 @@
 [build]
 publish = "build/web"
-command = "flutter build web --release"
+command = """
+    if [ ! -d "flutter" ]; then
+      git clone https://github.com/flutter/flutter.git -b stable --depth 1
+    fi
+    export PATH="$PATH:`pwd`/flutter/bin"
+    flutter config --no-analytics
+    flutter pub get
+    flutter build web --release
+  """
 
-[[plugins]]
-package = "@malejian/netlify-plugin-flutter"
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
