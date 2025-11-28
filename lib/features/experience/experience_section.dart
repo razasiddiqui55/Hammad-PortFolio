@@ -3,12 +3,15 @@ import 'dart:ui';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/responsive.dart';
 import '../../core/widgets/section_header.dart';
-import '../../core/widgets/glass_container.dart';
 import '../../data/models/experience_model.dart';
 
-
 class ExperienceSection extends StatefulWidget {
-  const ExperienceSection({super.key});
+  final bool isDarkMode;
+
+  const ExperienceSection({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   State<ExperienceSection> createState() => _ExperienceSectionState();
@@ -36,16 +39,15 @@ class _ExperienceSectionState extends State<ExperienceSection> {
       padding: context.responsive.sectionPadding,
       child: Column(
         children: [
-          // Animated section header
-          const SectionHeader(
+          SectionHeader(
             label: "My Journey",
             title: "Professional Experience",
             subtitle: "Explore my career path and key milestones achieved along the way.",
+            isDarkMode: widget.isDarkMode,
           ),
 
           const SizedBox(height: 60),
 
-          // Experience cards in a clean grid/column layout
           if (responsive.isMobile)
             _buildMobileLayout(experiences)
           else
@@ -83,11 +85,16 @@ class _ExperienceSectionState extends State<ExperienceSection> {
   }
 
   Widget _buildExperienceCard(ExperienceModel experience, int index) {
-    final colors = [
-      [const Color(0xFF2563EB), const Color(0xFF9333EA)],
-      [const Color(0xFF9333EA), const Color(0xFFEC4899)],
-      [const Color(0xFFEC4899), const Color(0xFFF59E0B)],
-      [const Color(0xFF10B981), const Color(0xFF06B6D4)],
+    final colors = widget.isDarkMode ? [
+      [AppTheme.darkPrimary, AppTheme.darkAccent],
+      [AppTheme.darkAccent, AppTheme.darkTertiary],
+      [AppTheme.darkTertiary, AppTheme.warning],
+      [AppTheme.success, AppTheme.darkSecondary],
+    ] : [
+      [AppTheme.lightPrimary, AppTheme.lightAccent],
+      [AppTheme.lightAccent, AppTheme.lightTertiary],
+      [AppTheme.lightTertiary, AppTheme.warning],
+      [AppTheme.success, AppTheme.lightSecondary],
     ];
 
     final colorPair = colors[index % colors.length];
@@ -108,6 +115,7 @@ class _ExperienceSectionState extends State<ExperienceSection> {
         colorPair: colorPair,
         experience: experience,
         index: index,
+        isDarkMode: widget.isDarkMode,
       ),
     );
   }
@@ -117,11 +125,13 @@ class _AnimatedExperienceCard extends StatefulWidget {
   final List<Color> colorPair;
   final ExperienceModel experience;
   final int index;
+  final bool isDarkMode;
 
   const _AnimatedExperienceCard({
     required this.colorPair,
     required this.experience,
     required this.index,
+    required this.isDarkMode,
   });
 
   @override
@@ -147,20 +157,20 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white.withValues(alpha:0.1),
-              Colors.white.withValues(alpha:0.05),
+              AppTheme.glass(0.1, widget.isDarkMode),
+              AppTheme.glass(0.05, widget.isDarkMode),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: Colors.white.withValues(alpha:0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: widget.colorPair[0].withValues(alpha:0.15),
+              color: widget.colorPair[0].withOpacity(0.15),
               blurRadius: 30,
               spreadRadius: 3,
             ),
@@ -172,21 +182,21 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Column(
               children: [
-                // Header section with gradient accent
+                // Header section
                 Container(
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        widget.colorPair[0].withValues(alpha:0.1),
-                        widget.colorPair[1].withValues(alpha:0.05),
+                        widget.colorPair[0].withOpacity(widget.isDarkMode ? 0.1 : 0.08),
+                        widget.colorPair[1].withOpacity(widget.isDarkMode ? 0.05 : 0.04),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     border: Border(
                       bottom: BorderSide(
-                        color: Colors.white.withValues(alpha:0.1),
+                        color: AppTheme.glassBorder(0.1, widget.isDarkMode),
                         width: 1,
                       ),
                     ),
@@ -196,7 +206,6 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                     children: [
                       Row(
                         children: [
-                          // Gradient icon
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
@@ -206,7 +215,7 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: widget.colorPair[0].withValues(alpha:0.3),
+                                  color: widget.colorPair[0].withOpacity(0.3),
                                   blurRadius: 12,
                                   spreadRadius: 2,
                                 ),
@@ -223,23 +232,21 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Role title
                                 Text(
                                   widget.experience.title,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.w800,
-                                    color: Colors.white,
+                                    color: AppTheme.getTextPrimary(widget.isDarkMode),
                                     letterSpacing: -0.5,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                // Company
                                 Row(
                                   children: [
                                     Icon(
                                       Icons.business_rounded,
-                                      color: Colors.white.withValues(alpha:0.7),
+                                      color: AppTheme.getTextSecondary(widget.isDarkMode),
                                       size: 16,
                                     ),
                                     const SizedBox(width: 8),
@@ -248,7 +255,7 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.white.withValues(alpha:0.8),
+                                        color: AppTheme.getTextSecondary(widget.isDarkMode),
                                         letterSpacing: 0.3,
                                       ),
                                     ),
@@ -260,7 +267,6 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      // Period badge
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -273,7 +279,7 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: widget.colorPair[0].withValues(alpha:0.3),
+                              color: widget.colorPair[0].withOpacity(0.3),
                               blurRadius: 10,
                               spreadRadius: 1,
                             ),
@@ -310,12 +316,11 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Description
                       Text(
                         widget.experience.description,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white.withValues(alpha:0.75),
+                          color: AppTheme.getTextSecondary(widget.isDarkMode),
                           height: 1.8,
                           letterSpacing: 0.3,
                         ),
@@ -324,7 +329,6 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                       if (widget.experience.achievements.isNotEmpty) ...[
                         const SizedBox(height: 28),
 
-                        // Achievements section
                         Row(
                           children: [
                             Container(
@@ -332,8 +336,8 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.amber.withValues(alpha:0.2),
-                                    Colors.amber.withValues(alpha:0.1),
+                                    Colors.amber.withOpacity(0.2),
+                                    Colors.amber.withOpacity(0.1),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(8),
@@ -350,7 +354,7 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white.withValues(alpha:0.9),
+                                color: AppTheme.getTextPrimary(widget.isDarkMode),
                                 letterSpacing: 0.3,
                               ),
                             ),
@@ -359,7 +363,6 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
 
                         const SizedBox(height: 16),
 
-                        // Achievement items
                         ...widget.experience.achievements.map((achievement) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12),
@@ -387,7 +390,7 @@ class _AnimatedExperienceCardState extends State<_AnimatedExperienceCard> {
                                     achievement,
                                     style: TextStyle(
                                       fontSize: 15,
-                                      color: Colors.white.withValues(alpha:0.7),
+                                      color: AppTheme.getTextSecondary(widget.isDarkMode),
                                       height: 1.7,
                                       letterSpacing: 0.2,
                                     ),

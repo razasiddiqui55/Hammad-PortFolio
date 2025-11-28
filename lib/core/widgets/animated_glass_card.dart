@@ -10,10 +10,12 @@ class AnimatedGlassCard extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final double borderRadius;
   final List<Color>? gradientColors;
+  final bool isDarkMode;
 
   const AnimatedGlassCard({
     super.key,
     required this.child,
+    required this.isDarkMode,
     this.onTap,
     this.width,
     this.height,
@@ -44,14 +46,15 @@ class _AnimatedGlassCardState extends State<AnimatedGlassCard> {
             ..translate(0.0, _isHovered ? -8.0 : 0.0)
             ..scale(_isHovered ? 1.02 : 1.0),
           child: GlassContainer(
+            isDarkMode: widget.isDarkMode,
             width: widget.width,
             height: widget.height,
             padding: widget.padding,
             borderRadius: widget.borderRadius,
             opacity: _isHovered ? 0.15 : 0.1,
-            borderColor: AppTheme.glassBorder(_isHovered ? 0.3 : 0.2),
+            borderColor: AppTheme.glassBorder(_isHovered ? 0.3 : 0.2, widget.isDarkMode),
             boxShadow: _isHovered ? AppTheme.shadowLg(
-                widget.gradientColors?.first ?? AppTheme.primary
+                widget.gradientColors?.first ?? AppTheme.getPrimary(widget.isDarkMode)
             ) : null,
             child: widget.child,
           ),

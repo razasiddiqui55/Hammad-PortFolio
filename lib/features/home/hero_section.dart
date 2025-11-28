@@ -9,10 +9,12 @@ import '../../core/widgets/fade_in_slide.dart';
 
 class HeroSection extends StatefulWidget {
   final VoidCallback onContactPressed;
+  final bool isDarkMode;
 
   const HeroSection({
     super.key,
     required this.onContactPressed,
+    required this.isDarkMode,
   });
 
   @override
@@ -155,13 +157,13 @@ class _HeroSectionState extends State<HeroSection>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppTheme.glass(0.15),
-              AppTheme.glass(0.08),
+              AppTheme.glass(0.15, widget.isDarkMode),
+              AppTheme.glass(0.08, widget.isDarkMode),
             ],
           ),
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
-            color: AppTheme.glassBorder(0.3),
+            color: AppTheme.glassBorder(0.3, widget.isDarkMode),
             width: 1,
           ),
         ),
@@ -186,7 +188,7 @@ class _HeroSectionState extends State<HeroSection>
             const SizedBox(width: 10),
             Text(
               'Available for work',
-              style: AppTheme.bodySmall.copyWith(
+              style: AppTheme.bodySmall(widget.isDarkMode).copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -198,22 +200,15 @@ class _HeroSectionState extends State<HeroSection>
 
   Widget _buildName(BuildContext context, Responsive responsive) {
     return ShaderMask(
-      shaderCallback: (bounds) => const LinearGradient(
-        colors: [
-          AppTheme.primary,
-          AppTheme.accent,
-          AppTheme.tertiary,
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ).createShader(bounds),
+      shaderCallback: (bounds) => AppTheme.primaryGradient(widget.isDarkMode)
+          .createShader(bounds),
       child: Text(
         'Hammad Siddiqui',
         style: context.scaleText(
             responsive.isMobile
-                ? AppTheme.displaySmall
-                : AppTheme.displayLarge
-        ).copyWith(color: AppTheme.textPrimary),
+                ? AppTheme.displaySmall(widget.isDarkMode)
+                : AppTheme.displayLarge(widget.isDarkMode)
+        ).copyWith(color: AppTheme.getTextPrimary(widget.isDarkMode)),
         textAlign: TextAlign.center,
       ),
     );
@@ -221,6 +216,7 @@ class _HeroSectionState extends State<HeroSection>
 
   Widget _buildRoleSwitcher(BuildContext context, Responsive responsive) {
     return GlassContainer(
+      isDarkMode: widget.isDarkMode,
       padding: EdgeInsets.symmetric(
         horizontal: responsive.value(mobile: 20.0, tablet: 32.0, desktop: 40.0),
         vertical: responsive.value(mobile: 16.0, tablet: 20.0, desktop: 24.0),
@@ -230,7 +226,9 @@ class _HeroSectionState extends State<HeroSection>
         height: responsive.value(mobile: 32.0, tablet: 40.0, desktop: 48.0),
         child: DefaultTextStyle(
           style: context.scaleText(
-              responsive.isMobile ? AppTheme.h4 : AppTheme.h2
+              responsive.isMobile
+                  ? AppTheme.h4(widget.isDarkMode)
+                  : AppTheme.h2(widget.isDarkMode)
           ).copyWith(fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
           child: AnimatedTextKit(
@@ -272,7 +270,9 @@ class _HeroSectionState extends State<HeroSection>
       child: Text(
         'Creating beautiful, responsive, and high-performance Flutter apps with clean code, thoughtful design, and cross-platform reliability',
         style: context.scaleText(
-            responsive.isMobile ? AppTheme.bodyMedium : AppTheme.bodyLarge
+            responsive.isMobile
+                ? AppTheme.bodyMedium(widget.isDarkMode)
+                : AppTheme.bodyLarge(widget.isDarkMode)
         ),
         textAlign: TextAlign.center,
       ),
@@ -290,6 +290,7 @@ class _HeroSectionState extends State<HeroSection>
           icon: Icons.download_rounded,
           onPressed: _downloadCV,
           width: responsive.isMobile ? double.infinity : null,
+          isDarkMode: widget.isDarkMode,
         ),
         GradientButton(
           text: 'Contact Me',
@@ -297,6 +298,7 @@ class _HeroSectionState extends State<HeroSection>
           isPrimary: false,
           onPressed: widget.onContactPressed,
           width: responsive.isMobile ? double.infinity : null,
+          isDarkMode: widget.isDarkMode,
         ),
       ],
     );
@@ -307,8 +309,8 @@ class _HeroSectionState extends State<HeroSection>
       children: [
         Text(
           'Scroll Down',
-          style: AppTheme.caption.copyWith(
-            color: AppTheme.textTertiary,
+          style: AppTheme.caption(widget.isDarkMode).copyWith(
+            color: AppTheme.getTextTertiary(widget.isDarkMode),
           ),
         ),
         const SizedBox(height: 8),
@@ -322,7 +324,7 @@ class _HeroSectionState extends State<HeroSection>
           },
           child: Icon(
             Icons.keyboard_arrow_down_rounded,
-            color: AppTheme.textTertiary,
+            color: AppTheme.getTextTertiary(widget.isDarkMode),
             size: 32,
           ),
         ),

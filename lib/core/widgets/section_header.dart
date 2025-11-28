@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hammad_portfolio/core/utils/responsive.dart';
-
 import '../theme/app_theme.dart';
 
 class SectionHeader extends StatelessWidget {
@@ -8,6 +7,7 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Gradient? gradient;
+  final bool isDarkMode;
 
   const SectionHeader({
     super.key,
@@ -15,6 +15,7 @@ class SectionHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.gradient,
+    required this.isDarkMode,
   });
 
   @override
@@ -25,27 +26,27 @@ class SectionHeader extends StatelessWidget {
       children: [
         // Label badge
         Container(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: AppTheme.md,
             vertical: AppTheme.sm,
           ),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppTheme.glass(0.1),
-                AppTheme.glass(0.05),
+                AppTheme.glass(0.1, isDarkMode),
+                AppTheme.glass(0.05, isDarkMode),
               ],
             ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: AppTheme.glassBorder(0.2),
+              color: AppTheme.glassBorder(0.2, isDarkMode),
               width: 1,
             ),
           ),
           child: Text(
             label.toUpperCase(),
-            style: AppTheme.overline.copyWith(
-              color: AppTheme.textSecondary,
+            style: AppTheme.overline(isDarkMode).copyWith(
+              color: AppTheme.getTextSecondary(isDarkMode),
             ),
           ),
         ),
@@ -54,12 +55,14 @@ class SectionHeader extends StatelessWidget {
 
         // Title with gradient
         ShaderMask(
-          shaderCallback: (bounds) => (gradient ?? AppTheme.primaryGradient)
+          shaderCallback: (bounds) => (gradient ?? AppTheme.primaryGradient(isDarkMode))
               .createShader(bounds),
           child: Text(
             title,
             style: context.scaleText(
-                responsive.isMobile ? AppTheme.displaySmall : AppTheme.displayMedium
+                responsive.isMobile
+                    ? AppTheme.displaySmall(isDarkMode)
+                    : AppTheme.displayMedium(isDarkMode)
             ),
             textAlign: TextAlign.center,
           ),
@@ -69,8 +72,8 @@ class SectionHeader extends StatelessWidget {
           const SizedBox(height: AppTheme.md),
           Text(
             subtitle!,
-            style: AppTheme.bodyMedium.copyWith(
-              color: AppTheme.textTertiary,
+            style: AppTheme.bodyMedium(isDarkMode).copyWith(
+              color: AppTheme.getTextTertiary(isDarkMode),
             ),
             textAlign: TextAlign.center,
           ),

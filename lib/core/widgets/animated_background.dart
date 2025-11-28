@@ -3,7 +3,12 @@ import 'dart:math' as math;
 import '../theme/app_theme.dart';
 
 class AnimatedBackground extends StatefulWidget {
-  const AnimatedBackground({super.key});
+  final bool isDarkMode;
+
+  const AnimatedBackground({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   State<AnimatedBackground> createState() => _AnimatedBackgroundState();
@@ -22,7 +27,6 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
       vsync: this,
     )..repeat();
 
-    // Reduced from 50 to 20 particles for better performance
     final random = math.Random();
     for (int i = 0; i < 20; i++) {
       _particles.add(Particle(
@@ -43,51 +47,62 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Base gradient
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppTheme.background,
-                AppTheme.backgroundLight,
-                AppTheme.background,
-              ],
-              stops: [0.0, 0.5, 1.0],
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      child: Stack(
+        children: [
+          // Base gradient
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: widget.isDarkMode ? [
+                  AppTheme.darkBackground,
+                  AppTheme.darkBackgroundLight,
+                  AppTheme.darkBackground,
+                ] : [
+                  AppTheme.lightBackground,
+                  AppTheme.lightBackgroundLight,
+                  AppTheme.lightBackground,
+                ],
+                stops: const [0.0, 0.5, 1.0],
+              ),
             ),
           ),
-        ),
 
-        // Gradient Orbs - Optimized with RepaintBoundary
-        RepaintBoundary(
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Stack(
-                children: List.generate(5, (index) {
-                  return _buildGradientOrb(context, index);
-                }),
-              );
-            },
+          // Gradient Orbs
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Stack(
+                  children: List.generate(5, (index) {
+                    return _buildGradientOrb(context, index);
+                  }),
+                );
+              },
+            ),
           ),
-        ),
 
-        // Particles - Optimized with RepaintBoundary
-        RepaintBoundary(
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: ParticlePainter(_particles, _controller.value),
-                size: Size.infinite,
-              );
-            },
+          // Particles
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: ParticlePainter(
+                    _particles,
+                    _controller.value,
+                    widget.isDarkMode,
+                  ),
+                  size: Size.infinite,
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -100,12 +115,18 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
       Alignment(0.0, 0.3),
     ];
 
-    const colors = [
-      [AppTheme.primary, AppTheme.accent],
-      [AppTheme.accent, AppTheme.tertiary],
-      [AppTheme.secondary, AppTheme.primary],
-      [AppTheme.tertiary, AppTheme.warning],
-      [AppTheme.success, AppTheme.secondary],
+    final colors = widget.isDarkMode ? [
+      [AppTheme.darkPrimary, AppTheme.darkAccent],
+      [AppTheme.darkAccent, AppTheme.darkTertiary],
+      [AppTheme.darkSecondary, AppTheme.darkPrimary],
+      [AppTheme.darkTertiary, AppTheme.warning],
+      [AppTheme.success, AppTheme.darkSecondary],
+    ] : [
+      [AppTheme.lightPrimary, AppTheme.lightAccent],
+      [AppTheme.lightAccent, AppTheme.lightTertiary],
+      [AppTheme.lightSecondary, AppTheme.lightPrimary],
+      [AppTheme.lightTertiary, AppTheme.warning],
+      [AppTheme.success, AppTheme.lightSecondary],
     ];
 
     const sizes = [600.0, 500.0, 550.0, 480.0, 520.0];
@@ -128,8 +149,8 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
             shape: BoxShape.circle,
             gradient: RadialGradient(
               colors: [
-                colors[index][0].withOpacity(0.3),
-                colors[index][1].withOpacity(0.15),
+                colors[index][0].withOpacity(widget.isDarkMode ? 0.3 : 0.2),
+                colors[index][1].withOpacity(widget.isDarkMode ? 0.15 : 0.1),
                 Colors.transparent,
               ],
             ),
@@ -159,7 +180,6 @@ class Particle {
     x += speedX;
     y += speedY;
 
-    // Wrap around screen edges
     if (x < 0) x = 1;
     if (x > 1) x = 0;
     if (y < 0) y = 1;
@@ -170,13 +190,15 @@ class Particle {
 class ParticlePainter extends CustomPainter {
   final List<Particle> particles;
   final double animationValue;
+  final bool isDarkMode;
 
-  ParticlePainter(this.particles, this.animationValue);
+  ParticlePainter(this.particles, this.animationValue, this.isDarkMode);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppTheme.textPrimary.withOpacity(0.5)
+      ..color = (isDarkMode ? AppTheme.darkTextPrimary : AppTheme.lightTextSecondary)
+          .withOpacity(isDarkMode ? 0.5 : 0.3)
       ..style = PaintingStyle.fill;
 
     for (var particle in particles) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../theme/app_theme.dart';
 
 class GradientButton extends StatefulWidget {
@@ -8,6 +7,7 @@ class GradientButton extends StatefulWidget {
   final VoidCallback onPressed;
   final bool isPrimary;
   final double? width;
+  final bool isDarkMode;
 
   const GradientButton({
     super.key,
@@ -16,6 +16,7 @@ class GradientButton extends StatefulWidget {
     required this.onPressed,
     this.isPrimary = true,
     this.width,
+    required this.isDarkMode,
   });
 
   @override
@@ -42,20 +43,22 @@ class _GradientButtonState extends State<GradientButton> {
           ),
           decoration: BoxDecoration(
             gradient: widget.isPrimary
-                ? AppTheme.primaryGradient
+                ? AppTheme.primaryGradient(widget.isDarkMode)
                 : LinearGradient(
               colors: [
-                AppTheme.glass(0.1),
-                AppTheme.glass(0.05),
+                AppTheme.glass(0.1, widget.isDarkMode),
+                AppTheme.glass(0.05, widget.isDarkMode),
               ],
             ),
             borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-            border: widget.isPrimary ? null : Border.all(
-              color: AppTheme.glassBorder(0.2),
+            border: widget.isPrimary
+                ? null
+                : Border.all(
+              color: AppTheme.glassBorder(0.2, widget.isDarkMode),
               width: 1,
             ),
             boxShadow: widget.isPrimary && _isHovered
-                ? AppTheme.shadowMd(AppTheme.primary)
+                ? AppTheme.shadowMd(AppTheme.getPrimary(widget.isDarkMode))
                 : null,
           ),
           child: Row(
@@ -65,14 +68,20 @@ class _GradientButtonState extends State<GradientButton> {
               if (widget.icon != null) ...[
                 Icon(
                   widget.icon,
-                  color: AppTheme.textPrimary,
+                  color: widget.isPrimary
+                      ? Colors.white
+                      : AppTheme.getTextPrimary(widget.isDarkMode),
                   size: 18,
                 ),
                 const SizedBox(width: AppTheme.sm),
               ],
               Text(
                 widget.text,
-                style: AppTheme.button,
+                style: AppTheme.button(widget.isDarkMode).copyWith(
+                  color: widget.isPrimary
+                      ? Colors.white
+                      : AppTheme.getTextPrimary(widget.isDarkMode),
+                ),
               ),
             ],
           ),

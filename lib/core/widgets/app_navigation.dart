@@ -9,11 +9,15 @@ import 'dart:ui';
 class AppNavigation extends StatefulWidget {
   final String activeSection;
   final Function(int) onNavigate;
+  final bool isDarkMode;
+  final VoidCallback onThemeToggle;
 
   const AppNavigation({
     super.key,
     required this.activeSection,
     required this.onNavigate,
+    required this.isDarkMode,
+    required this.onThemeToggle,
   });
 
   @override
@@ -22,7 +26,6 @@ class AppNavigation extends StatefulWidget {
 
 class _AppNavigationState extends State<AppNavigation> {
   bool _isMobileMenuOpen = false;
-  final bool _isScrolled = false;
 
   final List<NavItem> _navItems = const [
     NavItem(id: 'about', label: 'Overview', index: 1),
@@ -38,28 +41,25 @@ class _AppNavigationState extends State<AppNavigation> {
     final responsive = context.responsive;
 
     return Positioned(
-      top: _isScrolled ? 12 : 20,
+      top: 20,
       left: 0,
       right: 0,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        child: Center(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: responsive.isMobile
-                  ? MediaQuery.of(context).size.width - 32
-                  : 900,
-            ),
-            margin: EdgeInsets.symmetric(
-              horizontal: responsive.isMobile ? 16 : 0,
-            ),
-            child: Stack(
-              children: [
-                _buildNavBar(context, responsive),
-                if (_isMobileMenuOpen && responsive.isMobile)
-                  _buildMobileMenu(context, responsive),
-              ],
-            ),
+      child: Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: responsive.isMobile
+                ? MediaQuery.of(context).size.width - 32
+                : 900,
+          ),
+          margin: EdgeInsets.symmetric(
+            horizontal: responsive.isMobile ? 16 : 0,
+          ),
+          child: Stack(
+            children: [
+              _buildNavBar(context, responsive),
+              if (_isMobileMenuOpen && responsive.isMobile)
+                _buildMobileMenu(context, responsive),
+            ],
           ),
         ),
       ),
@@ -75,18 +75,19 @@ class _AppNavigationState extends State<AppNavigation> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppTheme.glass(0.15),
-                AppTheme.glass(0.08),
+                AppTheme.glass(0.15, widget.isDarkMode),
+                AppTheme.glass(0.08, widget.isDarkMode),
               ],
             ),
             borderRadius: BorderRadius.circular(AppTheme.radiusLg),
             border: Border.all(
-              color: AppTheme.glassBorder(0.2),
+              color: AppTheme.glassBorder(0.2, widget.isDarkMode),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: (widget.isDarkMode ? Colors.black : Colors.grey)
+                    .withOpacity(0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -100,20 +101,21 @@ class _AppNavigationState extends State<AppNavigation> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Logo
                 _buildLogo(),
-
-                // Desktop Navigation
                 if (!responsive.isMobile && !responsive.isTablet)
                   _buildDesktopNav(),
-
-                // Social Icons + Mobile Menu Button
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (!responsive.isMobile) _buildSocialIcons(),
-                    if (responsive.isMobile || responsive.isTablet)
+                    _buildThemeToggle(),
+                    if (!responsive.isMobile) ...[
+                      const SizedBox(width: 12),
+                      _buildSocialIcons(),
+                    ],
+                    if (responsive.isMobile || responsive.isTablet) ...[
+                      const SizedBox(width: 12),
                       _buildMobileMenuButton(),
+                    ],
                   ],
                 ),
               ],
@@ -131,15 +133,55 @@ class _AppNavigationState extends State<AppNavigation> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: ShaderMask(
-          shaderCallback: (bounds) => AppTheme.primaryGradient.createShader(bounds),
+          shaderCallback: (bounds) =>
+              AppTheme.primaryGradient(widget.isDarkMode).createShader(bounds),
           child: Text(
             'HS',
             style: GoogleFonts.spaceGrotesk(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: AppTheme.textPrimary,
+              color: AppTheme.getTextPrimary(widget.isDarkMode),
               letterSpacing: -1,
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeToggle() {
+    return InkWell(
+      onTap: widget.onThemeToggle,
+      borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppTheme.glass(0.15, widget.isDarkMode),
+              AppTheme.glass(0.05, widget.isDarkMode),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+          border: Border.all(
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
+            width: 1,
+          ),
+        ),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) {
+            return RotationTransition(
+              turns: animation,
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+          child: Icon(
+            widget.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+            key: ValueKey(widget.isDarkMode),
+            size: 20,
+            color: AppTheme.getTextPrimary(widget.isDarkMode),
           ),
         ),
       ),
@@ -162,17 +204,19 @@ class _AppNavigationState extends State<AppNavigation> {
                 horizontal: 14,
               ),
               decoration: BoxDecoration(
-                gradient: isActive ? AppTheme.primaryGradient : null,
+                gradient: isActive
+                    ? AppTheme.primaryGradient(widget.isDarkMode)
+                    : null,
                 borderRadius: BorderRadius.circular(AppTheme.radiusSm),
               ),
               child: Text(
                 item.label,
-                style: AppTheme.caption.copyWith(
+                style: AppTheme.caption(widget.isDarkMode).copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: isActive
-                      ? AppTheme.textPrimary
-                      : AppTheme.textSecondary,
+                      ? AppTheme.darkTextPrimary
+                      : AppTheme.getTextSecondary(widget.isDarkMode),
                   letterSpacing: -0.2,
                 ),
               ),
@@ -209,20 +253,20 @@ class _AppNavigationState extends State<AppNavigation> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppTheme.glass(0.15),
-              AppTheme.glass(0.05),
+              AppTheme.glass(0.15, widget.isDarkMode),
+              AppTheme.glass(0.05, widget.isDarkMode),
             ],
           ),
           borderRadius: BorderRadius.circular(AppTheme.radiusSm),
           border: Border.all(
-            color: AppTheme.glassBorder(0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
         ),
         child: Icon(
           icon,
           size: 16,
-          color: AppTheme.textPrimary,
+          color: AppTheme.getTextPrimary(widget.isDarkMode),
         ),
       ),
     );
@@ -237,20 +281,20 @@ class _AppNavigationState extends State<AppNavigation> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppTheme.glass(0.15),
-              AppTheme.glass(0.05),
+              AppTheme.glass(0.15, widget.isDarkMode),
+              AppTheme.glass(0.05, widget.isDarkMode),
             ],
           ),
           borderRadius: BorderRadius.circular(AppTheme.radiusSm),
           border: Border.all(
-            color: AppTheme.glassBorder(0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
         ),
         child: Icon(
           _isMobileMenuOpen ? Icons.close_rounded : Icons.menu_rounded,
           size: 24,
-          color: AppTheme.textPrimary,
+          color: AppTheme.getTextPrimary(widget.isDarkMode),
         ),
       ),
     );
@@ -269,20 +313,19 @@ class _AppNavigationState extends State<AppNavigation> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppTheme.glass(0.15),
-                  AppTheme.glass(0.08),
+                  AppTheme.glass(0.15, widget.isDarkMode),
+                  AppTheme.glass(0.08, widget.isDarkMode),
                 ],
               ),
               borderRadius: BorderRadius.circular(AppTheme.radiusLg),
               border: Border.all(
-                color: AppTheme.glassBorder(0.2),
+                color: AppTheme.glassBorder(0.2, widget.isDarkMode),
                 width: 1,
               ),
             ),
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // Navigation Items
                 ..._navItems.map((item) {
                   final isActive = widget.activeSection == item.id;
                   return Padding(
@@ -299,19 +342,23 @@ class _AppNavigationState extends State<AppNavigation> {
                           horizontal: 20,
                         ),
                         decoration: BoxDecoration(
-                          gradient: isActive ? AppTheme.primaryGradient : null,
-                          color: isActive ? null : AppTheme.glass(0.05),
+                          gradient: isActive
+                              ? AppTheme.primaryGradient(widget.isDarkMode)
+                              : null,
+                          color: isActive
+                              ? null
+                              : AppTheme.glass(0.05, widget.isDarkMode),
                           borderRadius: BorderRadius.circular(AppTheme.radiusMd),
                         ),
                         child: Row(
                           children: [
                             Text(
                               item.label,
-                              style: AppTheme.bodyMedium.copyWith(
+                              style: AppTheme.bodyMedium(widget.isDarkMode).copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: isActive
-                                    ? AppTheme.textPrimary
-                                    : AppTheme.textSecondary,
+                                    ? AppTheme.darkTextPrimary
+                                    : AppTheme.getTextSecondary(widget.isDarkMode),
                               ),
                             ),
                           ],
@@ -320,16 +367,13 @@ class _AppNavigationState extends State<AppNavigation> {
                     ),
                   );
                 }),
-
                 const SizedBox(height: 16),
-
-                // Social Links
                 Container(
                   padding: const EdgeInsets.only(top: 16),
                   decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(
-                        color: AppTheme.glassBorder(0.1),
+                        color: AppTheme.glassBorder(0.1, widget.isDarkMode),
                         width: 1,
                       ),
                     ),
@@ -369,21 +413,21 @@ class _AppNavigationState extends State<AppNavigation> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: AppTheme.glass(0.1),
+          color: AppTheme.glass(0.1, widget.isDarkMode),
           borderRadius: BorderRadius.circular(AppTheme.radiusMd),
           border: Border.all(
-            color: AppTheme.glassBorder(0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 18, color: AppTheme.textPrimary),
+            Icon(icon, size: 18, color: AppTheme.getTextPrimary(widget.isDarkMode)),
             const SizedBox(width: 8),
             Text(
               label,
-              style: AppTheme.bodySmall.copyWith(
+              style: AppTheme.bodySmall(widget.isDarkMode).copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),

@@ -8,7 +8,12 @@ import '../../core/widgets/fade_in_slide.dart';
 import '../../data/models/project_model.dart';
 
 class ProjectsSection extends StatelessWidget {
-  const ProjectsSection({super.key});
+  final bool isDarkMode;
+
+  const ProjectsSection({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +27,11 @@ class ProjectsSection extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: responsive.contentMaxWidth),
           child: Column(
             children: [
-              // Section Header
-              const SectionHeader(
+              SectionHeader(
                 label: 'MY WORK',
                 title: 'Featured Projects',
                 subtitle: 'Explore my latest work and creative solutions',
+                isDarkMode: isDarkMode,
               ),
 
               SizedBox(height: responsive.value(
@@ -35,7 +40,6 @@ class ProjectsSection extends StatelessWidget {
                 desktop: 80.0,
               )),
 
-              // Projects Grid
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -52,6 +56,7 @@ class ProjectsSection extends StatelessWidget {
                     child: ProjectCard(
                       project: projects[index],
                       index: index,
+                      isDarkMode: isDarkMode,
                     ),
                   );
                 },
@@ -67,20 +72,23 @@ class ProjectsSection extends StatelessWidget {
 class ProjectCard extends StatelessWidget {
   final ProjectModel project;
   final int index;
+  final bool isDarkMode;
 
   const ProjectCard({
     super.key,
     required this.project,
     required this.index,
+    required this.isDarkMode,
   });
 
   @override
   Widget build(BuildContext context) {
-    final gradientColors = AppTheme.projectGradients[index % AppTheme.projectGradients.length];
+    final gradientColors = AppTheme.projectGradients(isDarkMode)[index % AppTheme.projectGradients(isDarkMode).length];
 
     return AnimatedGlassCard(
       onTap: () => _showProjectDialog(context),
       gradientColors: gradientColors,
+      isDarkMode: isDarkMode,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -92,8 +100,8 @@ class ProjectCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    gradientColors[0].withOpacity(0.3),
-                    gradientColors[1].withOpacity(0.3),
+                    gradientColors[0].withOpacity(isDarkMode ? 0.3 : 0.2),
+                    gradientColors[1].withOpacity(isDarkMode ? 0.3 : 0.2),
                   ],
                 ),
                 borderRadius: const BorderRadius.vertical(
@@ -111,7 +119,7 @@ class ProjectCard extends StatelessWidget {
                   child: Icon(
                     _getProjectIcon(project.title),
                     size: 48,
-                    color: AppTheme.textPrimary,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -126,21 +134,19 @@ class ProjectCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   Text(
                     project.title,
-                    style: AppTheme.h4.copyWith(fontSize: 20),
+                    style: AppTheme.h4(isDarkMode).copyWith(fontSize: 20),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
 
                   const SizedBox(height: AppTheme.sm),
 
-                  // Description
                   Expanded(
                     child: Text(
                       project.description,
-                      style: AppTheme.bodySmall,
+                      style: AppTheme.bodySmall(isDarkMode),
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -148,7 +154,6 @@ class ProjectCard extends StatelessWidget {
 
                   const SizedBox(height: AppTheme.md),
 
-                  // Technologies
                   Wrap(
                     spacing: 6,
                     runSpacing: 6,
@@ -161,8 +166,8 @@ class ProjectCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              gradientColors[0].withOpacity(0.3),
-                              gradientColors[1].withOpacity(0.2),
+                              gradientColors[0].withOpacity(isDarkMode ? 0.3 : 0.2),
+                              gradientColors[1].withOpacity(isDarkMode ? 0.2 : 0.15),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(AppTheme.radiusSm),
@@ -173,7 +178,7 @@ class ProjectCard extends StatelessWidget {
                         ),
                         child: Text(
                           tech,
-                          style: AppTheme.caption.copyWith(fontSize: 11),
+                          style: AppTheme.caption(isDarkMode).copyWith(fontSize: 11),
                         ),
                       );
                     }).toList(),
@@ -181,7 +186,6 @@ class ProjectCard extends StatelessWidget {
 
                   const SizedBox(height: AppTheme.md),
 
-                  // View Details Button
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppTheme.md,
@@ -196,14 +200,15 @@ class ProjectCard extends StatelessWidget {
                       children: [
                         Text(
                           'View Details',
-                          style: AppTheme.caption.copyWith(
+                          style: AppTheme.caption(isDarkMode).copyWith(
                             fontWeight: FontWeight.w700,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(width: AppTheme.sm),
                         const Icon(
                           Icons.arrow_forward_rounded,
-                          color: AppTheme.textPrimary,
+                          color: Colors.white,
                           size: 16,
                         ),
                       ],
@@ -221,7 +226,10 @@ class ProjectCard extends StatelessWidget {
   void _showProjectDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => ProjectDialog(project: project),
+      builder: (context) => ProjectDialog(
+        project: project,
+        isDarkMode: isDarkMode,
+      ),
     );
   }
 
@@ -247,8 +255,13 @@ class ProjectCard extends StatelessWidget {
 
 class ProjectDialog extends StatelessWidget {
   final ProjectModel project;
+  final bool isDarkMode;
 
-  const ProjectDialog({super.key, required this.project});
+  const ProjectDialog({
+    super.key,
+    required this.project,
+    required this.isDarkMode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -259,19 +272,18 @@ class ProjectDialog extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppTheme.backgroundLight.withOpacity(0.98),
-              AppTheme.background.withOpacity(0.98),
+              AppTheme.getBackgroundLight(isDarkMode).withOpacity(0.98),
+              AppTheme.getBackground(isDarkMode).withOpacity(0.98),
             ],
           ),
           borderRadius: BorderRadius.circular(AppTheme.radiusXxl),
           border: Border.all(
-            color: AppTheme.glassBorder(0.2),
+            color: AppTheme.glassBorder(0.2, isDarkMode),
             width: 1,
           ),
         ),
         child: Column(
           children: [
-            // Header
             Padding(
               padding: const EdgeInsets.all(AppTheme.lg),
               child: Row(
@@ -279,24 +291,23 @@ class ProjectDialog extends StatelessWidget {
                   Expanded(
                     child: Text(
                       project.title,
-                      style: AppTheme.h3,
+                      style: AppTheme.h3(isDarkMode),
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close_rounded),
                     onPressed: () => Navigator.pop(context),
-                    color: AppTheme.textPrimary,
+                    color: AppTheme.getTextPrimary(isDarkMode),
                   ),
                 ],
               ),
             ),
 
-            const Divider(
-              color: AppTheme.surface,
+            Divider(
+              color: AppTheme.getSurface(isDarkMode),
               height: 1,
             ),
 
-            // Content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppTheme.lg),
@@ -305,17 +316,17 @@ class ProjectDialog extends StatelessWidget {
                   children: [
                     Text(
                       'Description',
-                      style: AppTheme.h4.copyWith(fontSize: 18),
+                      style: AppTheme.h4(isDarkMode).copyWith(fontSize: 18),
                     ),
                     const SizedBox(height: AppTheme.sm),
                     Text(
                       project.description,
-                      style: AppTheme.bodyMedium,
+                      style: AppTheme.bodyMedium(isDarkMode),
                     ),
                     const SizedBox(height: AppTheme.lg),
                     Text(
                       'Technologies',
-                      style: AppTheme.h4.copyWith(fontSize: 18),
+                      style: AppTheme.h4(isDarkMode).copyWith(fontSize: 18),
                     ),
                     const SizedBox(height: AppTheme.sm),
                     Wrap(
@@ -328,12 +339,12 @@ class ProjectDialog extends StatelessWidget {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: AppTheme.primary.withOpacity(0.2),
+                            color: AppTheme.getPrimary(isDarkMode).withOpacity(0.2),
                             borderRadius: BorderRadius.circular(AppTheme.radiusSm),
                           ),
                           child: Text(
                             tech,
-                            style: AppTheme.bodySmall.copyWith(
+                            style: AppTheme.bodySmall(isDarkMode).copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -345,8 +356,7 @@ class ProjectDialog extends StatelessWidget {
               ),
             ),
 
-            // Actions
-            if (project.githubUrl.isNotEmpty || project.liveUrl != null)
+            if (project.githubUrl.isNotEmpty || project.liveUrl.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(AppTheme.lg),
                 child: Row(
@@ -360,15 +370,15 @@ class ProjectDialog extends StatelessWidget {
                               () => _launchUrl(project.githubUrl),
                         ),
                       ),
-                    if (project.githubUrl.isNotEmpty && project.liveUrl != null)
+                    if (project.githubUrl.isNotEmpty && project.liveUrl.isNotEmpty)
                       const SizedBox(width: AppTheme.md),
-                    if (project.liveUrl != null)
+                    if (project.liveUrl.isNotEmpty)
                       Expanded(
                         child: _buildActionButton(
                           context,
                           'Live Demo',
                           Icons.launch_rounded,
-                              () => _launchUrl(project.liveUrl!),
+                              () => _launchUrl(project.liveUrl),
                         ),
                       ),
                   ],
@@ -389,8 +399,8 @@ class ProjectDialog extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.primary,
-        foregroundColor: AppTheme.textPrimary,
+        backgroundColor: AppTheme.getPrimary(isDarkMode),
+        foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: AppTheme.md),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppTheme.radiusMd),
@@ -401,7 +411,7 @@ class ProjectDialog extends StatelessWidget {
         children: [
           Icon(icon, size: 18),
           const SizedBox(width: AppTheme.sm),
-          Text(label, style: AppTheme.button.copyWith(fontSize: 14)),
+          Text(label, style: AppTheme.button(isDarkMode).copyWith(fontSize: 14, color: Colors.white)),
         ],
       ),
     );

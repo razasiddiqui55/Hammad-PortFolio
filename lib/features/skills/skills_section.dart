@@ -4,9 +4,15 @@ import 'dart:ui';
 import '../../core/utils/responsive.dart';
 import '../../core/widgets/section_header.dart';
 import '../../data/models/skill_model.dart';
+import '../../core/theme/app_theme.dart';
 
 class SkillsSection extends StatefulWidget {
-  const SkillsSection({super.key});
+  final bool isDarkMode;
+
+  const SkillsSection({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   State<SkillsSection> createState() => _SkillsSectionState();
@@ -47,15 +53,14 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
       padding: context.responsive.sectionPadding,
       child: Column(
         children: [
-          // Animated section header
-          const SectionHeader(
+          SectionHeader(
             label: 'What I Do Best',
             title: 'Technical Skills',
+            isDarkMode: widget.isDarkMode,
           ),
 
           const SizedBox(height: 60),
 
-          // Skills Grid
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -71,19 +76,18 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
                 skill: skills[index],
                 index: index,
                 isVisible: _isVisible,
+                isDarkMode: widget.isDarkMode,
               );
             },
           ),
 
           const SizedBox(height: 100),
 
-          // Tech Stack Section
           AnimatedOpacity(
             opacity: _isVisible ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 800),
             child: Column(
               children: [
-                // Decorative line
                 Row(
                   children: [
                     Expanded(
@@ -93,7 +97,7 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
                           gradient: LinearGradient(
                             colors: [
                               Colors.transparent,
-                              Colors.white.withValues(alpha:0.3),
+                              AppTheme.glassBorder(0.3, widget.isDarkMode),
                             ],
                           ),
                         ),
@@ -103,7 +107,7 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Icon(
                         Icons.code_rounded,
-                        color: Colors.white.withValues(alpha:0.6),
+                        color: AppTheme.getTextSecondary(widget.isDarkMode),
                         size: 24,
                       ),
                     ),
@@ -113,7 +117,7 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.white.withValues(alpha:0.3),
+                              AppTheme.glassBorder(0.3, widget.isDarkMode),
                               Colors.transparent,
                             ],
                           ),
@@ -126,18 +130,14 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
                 const SizedBox(height: 40),
 
                 ShaderMask(
-                  shaderCallback: (bounds) => const LinearGradient(
-                    colors: [
-                      Color(0xFF2563EB),
-                      Color(0xFF9333EA),
-                    ],
-                  ).createShader(bounds),
+                  shaderCallback: (bounds) => AppTheme.primaryGradient(widget.isDarkMode)
+                      .createShader(bounds),
                   child: Text(
                     'Tech Stack I Love',
                     style: TextStyle(
                       fontSize: responsive.isMobile ? 28 : 40,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color: AppTheme.getTextPrimary(widget.isDarkMode),
                       letterSpacing: -0.5,
                     ),
                     textAlign: TextAlign.center,
@@ -150,7 +150,7 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
                   'Technologies I work with daily',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white.withValues(alpha:0.6),
+                    color: AppTheme.getTextSecondary(widget.isDarkMode),
                     letterSpacing: 0.3,
                   ),
                   textAlign: TextAlign.center,
@@ -161,7 +161,6 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
 
           const SizedBox(height: 50),
 
-          // Tech Stack Grid
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -177,6 +176,7 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
                 tech: techStack[index],
                 index: index,
                 isVisible: _isVisible,
+                isDarkMode: widget.isDarkMode,
               );
             },
           ),
@@ -186,16 +186,17 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
   }
 }
 
-// Animated Skill Card
 class _AnimatedSkillCard extends StatefulWidget {
   final SkillModel skill;
   final int index;
   final bool isVisible;
+  final bool isDarkMode;
 
   const _AnimatedSkillCard({
     required this.skill,
     required this.index,
     required this.isVisible,
+    required this.isDarkMode,
   });
 
   @override
@@ -227,8 +228,8 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.white.withValues(alpha:_isHovered ? 0.15 : 0.1),
-                Colors.white.withValues(alpha:_isHovered ? 0.08 : 0.05),
+                AppTheme.glass(_isHovered ? 0.15 : 0.1, widget.isDarkMode),
+                AppTheme.glass(_isHovered ? 0.08 : 0.05, widget.isDarkMode),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -236,14 +237,14 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: _isHovered
-                  ? Colors.white.withValues(alpha:0.3)
-                  : Colors.white.withValues(alpha:0.2),
+                  ? AppTheme.glassBorder(0.3, widget.isDarkMode)
+                  : AppTheme.glassBorder(0.2, widget.isDarkMode),
               width: 1,
             ),
             boxShadow: _isHovered
                 ? [
               BoxShadow(
-                color: const Color(0xFF2563EB).withValues(alpha:0.2),
+                color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.2),
                 blurRadius: 30,
                 spreadRadius: 3,
               ),
@@ -265,16 +266,11 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF2563EB),
-                                Color(0xFF9333EA),
-                              ],
-                            ),
+                            gradient: AppTheme.primaryGradient(widget.isDarkMode),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF2563EB).withValues(alpha:0.3),
+                                color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
                                 blurRadius: 15,
                                 spreadRadius: 1,
                               ),
@@ -293,10 +289,10 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
                             children: [
                               Text(
                                 widget.skill.name,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: Colors.white,
+                                  color: AppTheme.getTextPrimary(widget.isDarkMode),
                                   letterSpacing: -0.3,
                                 ),
                               ),
@@ -305,7 +301,7 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
                                 '${widget.skill.proficiency}% Proficiency',
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Colors.white.withValues(alpha:0.6),
+                                  color: AppTheme.getTextSecondary(widget.isDarkMode),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -315,11 +311,10 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    // Progress bar
                     Container(
                       height: 8,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha:0.1),
+                        color: AppTheme.glass(0.1, widget.isDarkMode),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: LayoutBuilder(
@@ -330,17 +325,11 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
                                 duration: const Duration(milliseconds: 1000),
                                 width: constraints.maxWidth * (widget.skill.proficiency / 100),
                                 decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFF2563EB),
-                                      Color(0xFF9333EA),
-                                      Color(0xFFEC4899),
-                                    ],
-                                  ),
+                                  gradient: AppTheme.primaryGradient(widget.isDarkMode),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF2563EB).withValues(alpha:0.5),
+                                      color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.5),
                                       blurRadius: 10,
                                       spreadRadius: 1,
                                     ),
@@ -364,36 +353,40 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
 
   IconData _getSkillIcon(String skillName) {
     final iconMap = {
-      'Flutter': Icons.flutter_dash,
-      'Dart': Icons.code_rounded,
-      'Firebase': Icons.local_fire_department_rounded,
-      'UI/UX': Icons.design_services_rounded,
-      'State Management': Icons.settings_suggest_rounded,
-      'API Integration': Icons.api_rounded,
+      'Flutter & Dart': Icons.flutter_dash,
+      'GetX State Management': Icons.settings_suggest_rounded,
+      'Firebase Integration': Icons.local_fire_department_rounded,
+      'REST APIs': Icons.api_rounded,
       'Clean Architecture': Icons.architecture_rounded,
-      'Git': Icons.source_rounded,
+      'UI/UX Design': Icons.design_services_rounded,
+      'Stripe Payment': Icons.payment_rounded,
+      'CI/CD': Icons.cloud_sync_rounded,
+      'Git & GitHub': Icons.source_rounded,
+      'Shared Preferences': Icons.storage_rounded,
     };
     return iconMap[skillName] ?? Icons.star_rounded;
   }
 }
 
-// Animated Tech Card
 class _AnimatedTechCard extends StatefulWidget {
   final TechStack tech;
   final int index;
   final bool isVisible;
+  final bool isDarkMode;
 
   const _AnimatedTechCard({
     required this.tech,
     required this.index,
     required this.isVisible,
+    required this.isDarkMode,
   });
 
   @override
   State<_AnimatedTechCard> createState() => _AnimatedTechCardState();
 }
 
-class _AnimatedTechCardState extends State<_AnimatedTechCard> with SingleTickerProviderStateMixin {
+class _AnimatedTechCardState extends State<_AnimatedTechCard>
+    with SingleTickerProviderStateMixin {
   bool _isHovered = false;
   late AnimationController _floatController;
   late Animation<double> _floatAnimation;
@@ -453,12 +446,12 @@ class _AnimatedTechCardState extends State<_AnimatedTechCard> with SingleTickerP
               gradient: LinearGradient(
                 colors: _isHovered
                     ? [
-                  Colors.white.withValues(alpha:0.2),
-                  Colors.white.withValues(alpha:0.1),
+                  AppTheme.glass(0.2, widget.isDarkMode),
+                  AppTheme.glass(0.1, widget.isDarkMode),
                 ]
                     : [
-                  Colors.white.withValues(alpha:0.1),
-                  Colors.white.withValues(alpha:0.05),
+                  AppTheme.glass(0.1, widget.isDarkMode),
+                  AppTheme.glass(0.05, widget.isDarkMode),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -466,14 +459,14 @@ class _AnimatedTechCardState extends State<_AnimatedTechCard> with SingleTickerP
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: _isHovered
-                    ? Colors.white.withValues(alpha:0.4)
-                    : Colors.white.withValues(alpha:0.2),
+                    ? AppTheme.glassBorder(0.4, widget.isDarkMode)
+                    : AppTheme.glassBorder(0.2, widget.isDarkMode),
                 width: _isHovered ? 2 : 1,
               ),
               boxShadow: _isHovered
                   ? [
                 BoxShadow(
-                  color: const Color(0xFF9333EA).withValues(alpha:0.3),
+                  color: AppTheme.getAccent(widget.isDarkMode).withOpacity(0.3),
                   blurRadius: 25,
                   spreadRadius: 3,
                 ),
@@ -492,10 +485,6 @@ class _AnimatedTechCardState extends State<_AnimatedTechCard> with SingleTickerP
                       widget.tech.icon,
                       width: _isHovered ? 52 : 44,
                       height: _isHovered ? 52 : 44,
-                      // colorFilter: ColorFilter.mode(
-                      //   Colors.white,
-                      //   BlendMode.srcIn,
-                      // ),
                     )
                         : Text(
                       widget.tech.icon,
@@ -512,7 +501,7 @@ class _AnimatedTechCardState extends State<_AnimatedTechCard> with SingleTickerP
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white.withValues(alpha:0.9),
+                          color: AppTheme.getTextPrimary(widget.isDarkMode),
                           letterSpacing: 0.3,
                         ),
                         textAlign: TextAlign.center,

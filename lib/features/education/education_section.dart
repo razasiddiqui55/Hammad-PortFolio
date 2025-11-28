@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../../core/utils/responsive.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/theme/app_theme.dart';
 
 class EducationSection extends StatefulWidget {
-  const EducationSection({super.key});
+  final bool isDarkMode;
+
+  const EducationSection({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   State<EducationSection> createState() => _EducationSectionState();
@@ -31,15 +37,14 @@ class _EducationSectionState extends State<EducationSection> {
       padding: context.responsive.sectionPadding,
       child: Column(
         children: [
-          // Animated section header
-          const SectionHeader(
+          SectionHeader(
             label: 'Academic Background',
             title: 'Education',
+            isDarkMode: widget.isDarkMode,
           ),
 
           const SizedBox(height: 60),
 
-          // Education Card
           Center(
             child: TweenAnimationBuilder(
               duration: const Duration(milliseconds: 800),
@@ -58,20 +63,20 @@ class _EducationSectionState extends State<EducationSection> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withValues(alpha:0.1),
-                      Colors.white.withValues(alpha:0.05),
+                      AppTheme.glass(0.1, widget.isDarkMode),
+                      AppTheme.glass(0.05, widget.isDarkMode),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha:0.2),
+                    color: AppTheme.glassBorder(0.2, widget.isDarkMode),
                     width: 1,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF2563EB).withValues(alpha:0.1),
+                      color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.1),
                       blurRadius: 40,
                       spreadRadius: 5,
                     ),
@@ -107,7 +112,6 @@ class _EducationSectionState extends State<EducationSection> {
 
           const SizedBox(height: 60),
 
-          // Additional Info Cards
           TweenAnimationBuilder(
             duration: const Duration(milliseconds: 1000),
             tween: Tween<double>(begin: 0, end: _isVisible ? 1 : 0),
@@ -145,18 +149,10 @@ class _EducationSectionState extends State<EducationSection> {
         height: 140,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFF2563EB),
-              Color(0xFF9333EA),
-              Color(0xFFEC4899),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppTheme.primaryGradient(widget.isDarkMode),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF9333EA).withValues(alpha:0.5),
+              color: AppTheme.getAccent(widget.isDarkMode).withOpacity(0.5),
               blurRadius: 40,
               spreadRadius: 5,
             ),
@@ -166,16 +162,16 @@ class _EducationSectionState extends State<EducationSection> {
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFF1E293B),
+            color: AppTheme.getBackgroundLight(widget.isDarkMode),
             border: Border.all(
-              color: Colors.white.withValues(alpha:0.1),
+              color: AppTheme.glassBorder(0.1, widget.isDarkMode),
               width: 2,
             ),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.school_rounded,
             size: 60,
-            color: Colors.white,
+            color: AppTheme.getTextPrimary(widget.isDarkMode),
           ),
         ),
       ),
@@ -186,17 +182,14 @@ class _EducationSectionState extends State<EducationSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // University Name
         ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF2563EB), Color(0xFF9333EA)],
-          ).createShader(bounds),
+          shaderCallback: (bounds) => AppTheme.primaryGradient(widget.isDarkMode).createShader(bounds),
           child: Text(
             'Bahauddin Zakariya University',
             style: TextStyle(
               fontSize: responsive.isMobile ? 24 : 32,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: AppTheme.getTextPrimary(widget.isDarkMode),
               letterSpacing: -0.5,
             ),
           ),
@@ -204,20 +197,14 @@ class _EducationSectionState extends State<EducationSection> {
 
         const SizedBox(height: 16),
 
-        // Degree
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [
-                Color(0xFF2563EB),
-                Color(0xFF9333EA),
-              ],
-            ),
+            gradient: AppTheme.primaryGradient(widget.isDarkMode),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF2563EB).withValues(alpha:0.3),
+                color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
                 blurRadius: 15,
                 spreadRadius: 1,
               ),
@@ -247,7 +234,6 @@ class _EducationSectionState extends State<EducationSection> {
 
         const SizedBox(height: 24),
 
-        // Location
         _buildInfoRow(
           Icons.location_on_rounded,
           'Multan, Punjab, Pakistan',
@@ -256,7 +242,6 @@ class _EducationSectionState extends State<EducationSection> {
 
         const SizedBox(height: 16),
 
-        // Field of Study
         _buildInfoRow(
           Icons.code_rounded,
           'Computer Science & Software Engineering',
@@ -265,19 +250,18 @@ class _EducationSectionState extends State<EducationSection> {
 
         const SizedBox(height: 24),
 
-        // Description
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.white.withValues(alpha:0.05),
-                Colors.white.withValues(alpha:0.02),
+                AppTheme.glass(0.05, widget.isDarkMode),
+                AppTheme.glass(0.02, widget.isDarkMode),
               ],
             ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: Colors.white.withValues(alpha:0.1),
+              color: AppTheme.glassBorder(0.1, widget.isDarkMode),
               width: 1,
             ),
           ),
@@ -285,7 +269,7 @@ class _EducationSectionState extends State<EducationSection> {
             'Developed a strong foundation in computer science principles, software engineering practices, and modern development methodologies. Gained extensive knowledge in algorithms, data structures, and system design.',
             style: TextStyle(
               fontSize: responsive.isMobile ? 14 : 16,
-              color: Colors.white.withValues(alpha:0.8),
+              color: AppTheme.getTextSecondary(widget.isDarkMode),
               height: 1.7,
               letterSpacing: 0.3,
             ),
@@ -303,19 +287,19 @@ class _EducationSectionState extends State<EducationSection> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.white.withValues(alpha:0.1),
-                Colors.white.withValues(alpha:0.05),
+                AppTheme.glass(0.1, widget.isDarkMode),
+                AppTheme.glass(0.05, widget.isDarkMode),
               ],
             ),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: Colors.white.withValues(alpha:0.2),
+              color: AppTheme.glassBorder(0.2, widget.isDarkMode),
               width: 1,
             ),
           ),
           child: Icon(
             icon,
-            color: Colors.white.withValues(alpha:0.8),
+            color: AppTheme.getTextSecondary(widget.isDarkMode),
             size: 20,
           ),
         ),
@@ -325,7 +309,7 @@ class _EducationSectionState extends State<EducationSection> {
             text,
             style: TextStyle(
               fontSize: responsive.isMobile ? 15 : 17,
-              color: Colors.white.withValues(alpha:0.9),
+              color: AppTheme.getTextPrimary(widget.isDarkMode),
               fontWeight: FontWeight.w600,
               letterSpacing: 0.3,
             ),
@@ -383,13 +367,13 @@ class _EducationSectionState extends State<EducationSection> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white.withValues(alpha:0.1),
-              Colors.white.withValues(alpha:0.05),
+              AppTheme.glass(0.1, widget.isDarkMode),
+              AppTheme.glass(0.05, widget.isDarkMode),
             ],
           ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.white.withValues(alpha:0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
         ),
@@ -398,16 +382,11 @@ class _EducationSectionState extends State<EducationSection> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF2563EB),
-                    Color(0xFF9333EA),
-                  ],
-                ),
+                gradient: AppTheme.primaryGradient(widget.isDarkMode),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF2563EB).withValues(alpha:0.3),
+                    color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
                     blurRadius: 15,
                     spreadRadius: 1,
                   ),
@@ -422,10 +401,10 @@ class _EducationSectionState extends State<EducationSection> {
             const SizedBox(height: 16),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppTheme.getTextPrimary(widget.isDarkMode),
                 letterSpacing: -0.3,
               ),
               textAlign: TextAlign.center,
@@ -435,7 +414,7 @@ class _EducationSectionState extends State<EducationSection> {
               description,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.white.withValues(alpha:0.7),
+                color: AppTheme.getTextSecondary(widget.isDarkMode),
                 letterSpacing: 0.3,
               ),
               textAlign: TextAlign.center,

@@ -15,10 +15,12 @@ class GlassContainer extends StatelessWidget {
   final Color? borderColor;
   final double borderWidth;
   final List<BoxShadow>? boxShadow;
+  final bool isDarkMode;
 
   const GlassContainer({
     super.key,
     required this.child,
+    required this.isDarkMode,
     this.width,
     this.height,
     this.padding,
@@ -41,15 +43,15 @@ class GlassContainer extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: gradient ?? LinearGradient(
           colors: [
-            AppTheme.glass(opacity),
-            AppTheme.glass(opacity * 0.5),
+            AppTheme.glass(opacity, isDarkMode),
+            AppTheme.glass(opacity * 0.5, isDarkMode),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
-          color: borderColor ?? AppTheme.glassBorder(0.2),
+          color: borderColor ?? AppTheme.glassBorder(0.2, isDarkMode),
           width: borderWidth,
         ),
         boxShadow: boxShadow,

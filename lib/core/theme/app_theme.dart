@@ -2,43 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Colors
-  static const primary = Color(0xFF6366F1);
-  static const primaryDark = Color(0xFF4F46E5);
-  static const accent = Color(0xFFA855F7);
-  static const accentDark = Color(0xFF9333EA);
-  static const secondary = Color(0xFF06B6D4);
-  static const tertiary = Color(0xFFEC4899);
+  // ============ DARK THEME COLORS ============
+  static const darkPrimary = Color(0xFF6366F1);
+  static const darkPrimaryDark = Color(0xFF4F46E5);
+  static const darkAccent = Color(0xFFA855F7);
+  static const darkAccentDark = Color(0xFF9333EA);
+  static const darkSecondary = Color(0xFF06B6D4);
+  static const darkTertiary = Color(0xFFEC4899);
+
+  static const darkBackground = Color(0xFF0F172A);
+  static const darkBackgroundLight = Color(0xFF1E293B);
+  static const darkSurface = Color(0xFF334155);
+
+  static const darkTextPrimary = Color(0xFFF8FAFC);
+  static const darkTextSecondary = Color(0xFFCBD5E1);
+  static const darkTextTertiary = Color(0xFF94A3B8);
+
+  // ============ LIGHT THEME COLORS ============
+  static const lightPrimary = Color(0xFF4F46E5);
+  static const lightPrimaryDark = Color(0xFF4338CA);
+  static const lightAccent = Color(0xFF9333EA);
+  static const lightAccentDark = Color(0xFF7E22CE);
+  static const lightSecondary = Color(0xFF0891B2);
+  static const lightTertiary = Color(0xFFDB2777);
+
+  static const lightBackground = Color(0xFFF8FAFC);
+  static const lightBackgroundLight = Color(0xFFFFFFFF);
+  static const lightSurface = Color(0xFFE2E8F0);
+
+  static const lightTextPrimary = Color(0xFF0F172A);
+  static const lightTextSecondary = Color(0xFF475569);
+  static const lightTextTertiary = Color(0xFF64748B);
+
+  // Common colors
   static const success = Color(0xFF10B981);
   static const warning = Color(0xFFF59E0B);
   static const error = Color(0xFFEF4444);
-
-  static const background = Color(0xFF0F172A);
-  static const backgroundLight = Color(0xFF1E293B);
-  static const surface = Color(0xFF334155);
-
-  static const textPrimary = Color(0xFFF8FAFC);
-  static const textSecondary = Color(0xFFCBD5E1);
-  static const textTertiary = Color(0xFF94A3B8);
-
-  // Gradients
-  static const primaryGradient = LinearGradient(
-    colors: [primary, accent],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const accentGradient = LinearGradient(
-    colors: [accent, tertiary],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const warmGradient = LinearGradient(
-    colors: [tertiary, warning],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
 
   // Spacing
   static const double xs = 4;
@@ -56,106 +55,140 @@ class AppTheme {
   static const double radiusXl = 20;
   static const double radiusXxl = 24;
 
-  // Text Styles
-  static TextStyle displayLarge = GoogleFonts.inter(
+  // ============ TEXT STYLES ============
+  static TextStyle _baseDisplayLarge(Color color) => GoogleFonts.inter(
     fontSize: 80,
     fontWeight: FontWeight.w900,
     height: 1.1,
     letterSpacing: -2,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle displayMedium = GoogleFonts.inter(
+  static TextStyle _baseDisplayMedium(Color color) => GoogleFonts.inter(
     fontSize: 56,
     fontWeight: FontWeight.w900,
     height: 1.2,
     letterSpacing: -1.5,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle displaySmall = GoogleFonts.inter(
+  static TextStyle _baseDisplaySmall(Color color) => GoogleFonts.inter(
     fontSize: 36,
     fontWeight: FontWeight.w900,
     height: 1.3,
     letterSpacing: -1,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle h1 = GoogleFonts.inter(
+  static TextStyle _baseH1(Color color) => GoogleFonts.inter(
     fontSize: 48,
     fontWeight: FontWeight.w800,
     height: 1.2,
     letterSpacing: -1.2,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle h2 = GoogleFonts.inter(
+  static TextStyle _baseH2(Color color) => GoogleFonts.inter(
     fontSize: 36,
     fontWeight: FontWeight.w800,
     height: 1.3,
     letterSpacing: -0.8,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle h3 = GoogleFonts.inter(
+  static TextStyle _baseH3(Color color) => GoogleFonts.inter(
     fontSize: 28,
     fontWeight: FontWeight.w700,
     height: 1.3,
     letterSpacing: -0.5,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle h4 = GoogleFonts.inter(
+  static TextStyle _baseH4(Color color) => GoogleFonts.inter(
     fontSize: 24,
     fontWeight: FontWeight.w700,
     height: 1.4,
     letterSpacing: -0.3,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle bodyLarge = GoogleFonts.inter(
+  static TextStyle _baseBodyLarge(Color color) => GoogleFonts.inter(
     fontSize: 18,
     fontWeight: FontWeight.w400,
     height: 1.8,
     letterSpacing: 0.3,
-    color: textSecondary,
+    color: color,
   );
 
-  static TextStyle bodyMedium = GoogleFonts.inter(
+  static TextStyle _baseBodyMedium(Color color) => GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     height: 1.7,
     letterSpacing: 0.3,
-    color: textSecondary,
+    color: color,
   );
 
-  static TextStyle bodySmall = GoogleFonts.inter(
+  static TextStyle _baseBodySmall(Color color) => GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     height: 1.6,
     letterSpacing: 0.2,
-    color: textSecondary,
+    color: color,
   );
 
-  static TextStyle button = GoogleFonts.inter(
+  static TextStyle _baseButton(Color color) => GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.5,
-    color: textPrimary,
+    color: color,
   );
 
-  static TextStyle caption = GoogleFonts.inter(
+  static TextStyle _baseCaption(Color color) => GoogleFonts.inter(
     fontSize: 13,
     fontWeight: FontWeight.w600,
     letterSpacing: 1,
-    color: textTertiary,
+    color: color,
   );
 
-  static TextStyle overline = GoogleFonts.inter(
+  static TextStyle _baseOverline(Color color) => GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w700,
     letterSpacing: 2,
-    color: textTertiary,
+    color: color,
+  );
+
+  // ============ GET TEXT STYLES BY THEME ============
+  static TextStyle displayLarge(bool isDark) => _baseDisplayLarge(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle displayMedium(bool isDark) => _baseDisplayMedium(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle displaySmall(bool isDark) => _baseDisplaySmall(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle h1(bool isDark) => _baseH1(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle h2(bool isDark) => _baseH2(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle h3(bool isDark) => _baseH3(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle h4(bool isDark) => _baseH4(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle bodyLarge(bool isDark) => _baseBodyLarge(isDark ? darkTextSecondary : lightTextSecondary);
+  static TextStyle bodyMedium(bool isDark) => _baseBodyMedium(isDark ? darkTextSecondary : lightTextSecondary);
+  static TextStyle bodySmall(bool isDark) => _baseBodySmall(isDark ? darkTextSecondary : lightTextSecondary);
+  static TextStyle button(bool isDark) => _baseButton(isDark ? darkTextPrimary : lightTextPrimary);
+  static TextStyle caption(bool isDark) => _baseCaption(isDark ? darkTextTertiary : lightTextTertiary);
+  static TextStyle overline(bool isDark) => _baseOverline(isDark ? darkTextTertiary : lightTextTertiary);
+
+  // ============ GRADIENTS ============
+  static LinearGradient primaryGradient(bool isDark) => LinearGradient(
+    colors: isDark ? [darkPrimary, darkAccent] : [lightPrimary, lightAccent],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static LinearGradient accentGradient(bool isDark) => LinearGradient(
+    colors: isDark ? [darkAccent, darkTertiary] : [lightAccent, lightTertiary],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static LinearGradient warmGradient(bool isDark) => LinearGradient(
+    colors: isDark ? [darkTertiary, warning] : [lightTertiary, warning],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
   );
 
   // Shadows
@@ -187,38 +220,58 @@ class AppTheme {
   ];
 
   // Glass Effect Colors
-  static Color glass(double opacity) => Colors.white.withOpacity(opacity);
-  static Color glassBorder(double opacity) => Colors.white.withOpacity(opacity);
+  static Color glass(double opacity, bool isDark) =>
+      isDark ? Colors.white.withOpacity(opacity) : Colors.black.withOpacity(opacity * 0.5);
 
-  // Gradient Helpers
-  static List<List<Color>> projectGradients = [
-    [primary, accent],
-    [accent, tertiary],
-    [tertiary, warning],
-    [success, secondary],
-    [secondary, primary],
+  static Color glassBorder(double opacity, bool isDark) =>
+      isDark ? Colors.white.withOpacity(opacity) : Colors.black.withOpacity(opacity * 0.5);
+
+  // Project Gradients
+  static List<List<Color>> projectGradients(bool isDark) => isDark ? [
+    [darkPrimary, darkAccent],
+    [darkAccent, darkTertiary],
+    [darkTertiary, warning],
+    [success, darkSecondary],
+    [darkSecondary, darkPrimary],
+    [warning, error],
+  ] : [
+    [lightPrimary, lightAccent],
+    [lightAccent, lightTertiary],
+    [lightTertiary, warning],
+    [success, lightSecondary],
+    [lightSecondary, lightPrimary],
     [warning, error],
   ];
 
-  static LinearGradient getProjectGradient(int index) {
-    final colors = projectGradients[index % projectGradients.length];
+  static LinearGradient getProjectGradient(int index, bool isDark) {
+    final colors = projectGradients(isDark)[index % projectGradients(isDark).length];
     return LinearGradient(
       colors: colors,
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
   }
+
+  // Get theme colors
+  static Color getBackground(bool isDark) => isDark ? darkBackground : lightBackground;
+  static Color getBackgroundLight(bool isDark) => isDark ? darkBackgroundLight : lightBackgroundLight;
+  static Color getSurface(bool isDark) => isDark ? darkSurface : lightSurface;
+  static Color getTextPrimary(bool isDark) => isDark ? darkTextPrimary : lightTextPrimary;
+  static Color getTextSecondary(bool isDark) => isDark ? darkTextSecondary : lightTextSecondary;
+  static Color getTextTertiary(bool isDark) => isDark ? darkTextTertiary : lightTextTertiary;
+  static Color getPrimary(bool isDark) => isDark ? darkPrimary : lightPrimary;
+  static Color getAccent(bool isDark) => isDark ? darkAccent : lightAccent;
 }
 
 // Responsive Text Styles Extension
 extension ResponsiveTextStyles on BuildContext {
   double get _scaleFactor {
     final width = MediaQuery.of(this).size.width;
-    if (width < 640) return 0.85;
-    if (width < 768) return 0.95;
-    if (width < 1024) return 1.0;
-    if (width < 1440) return 1.1;
-    return 1.2;
+    if (width < 640) return 0.75;
+    if (width < 768) return 0.85;
+    if (width < 1024) return 0.95;
+    if (width < 1440) return 1.0;
+    return 1.1;
   }
 
   TextStyle scaleText(TextStyle style) {

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hammad_portfolio/core/utils/responsive.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../../core/widgets/section_header.dart';
+import '../../core/theme/app_theme.dart';
 
 class ContactSection extends StatefulWidget {
-  const ContactSection({super.key});
+  final bool isDarkMode;
+
+  const ContactSection({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   State<ContactSection> createState() => _ContactSectionState();
@@ -42,7 +46,7 @@ class _ContactSectionState extends State<ContactSection> {
     super.dispose();
   }
 
-//   Future<void> _sendMessage() async {
+  //   Future<void> _sendMessage() async {
 //     if (_formKey.currentState!.validate()) {
 //       setState(() => _isLoading = true);
 //
@@ -146,7 +150,7 @@ class _ContactSectionState extends State<ContactSection> {
         final response = await http.post(
           url,
           headers: {
-            'origin': 'http://localhost', // must include this
+            'origin': 'http://localhost',
             'Content-Type': 'application/json',
           },
           body: json.encode({
@@ -185,11 +189,11 @@ class _ContactSectionState extends State<ContactSection> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E293B),
+        backgroundColor: AppTheme.getBackgroundLight(widget.isDarkMode),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(
-            color: Colors.white.withValues(alpha:0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
         ),
@@ -201,11 +205,11 @@ class _ContactSectionState extends State<ContactSection> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF10B981), Color(0xFF06B6D4)],
+                  colors: [AppTheme.success, Color(0xFF06B6D4)],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF10B981).withValues(alpha:0.5),
+                    color: AppTheme.success.withOpacity(0.5),
                     blurRadius: 20,
                     spreadRadius: 2,
                   ),
@@ -218,12 +222,12 @@ class _ContactSectionState extends State<ContactSection> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Message Sent!',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppTheme.getTextPrimary(widget.isDarkMode),
               ),
             ),
             const SizedBox(height: 12),
@@ -231,7 +235,7 @@ class _ContactSectionState extends State<ContactSection> {
               'Your message has been sent successfully! I\'ll get back to you as soon as possible.',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.white.withValues(alpha:0.7),
+                color: AppTheme.getTextSecondary(widget.isDarkMode),
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -252,9 +256,7 @@ class _ContactSectionState extends State<ContactSection> {
                 ),
                 child: Ink(
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF2563EB), Color(0xFF9333EA)],
-                    ),
+                    gradient: AppTheme.primaryGradient(widget.isDarkMode),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Container(
@@ -265,6 +267,7 @@ class _ContactSectionState extends State<ContactSection> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -281,11 +284,11 @@ class _ContactSectionState extends State<ContactSection> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E293B),
+        backgroundColor: AppTheme.getBackgroundLight(widget.isDarkMode),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(
-            color: Colors.white.withValues(alpha:0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
         ),
@@ -296,21 +299,21 @@ class _ContactSectionState extends State<ContactSection> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFEF4444).withValues(alpha:0.2),
+                color: AppTheme.error.withOpacity(0.2),
               ),
               child: const Icon(
                 Icons.error_outline_rounded,
-                color: Color(0xFFEF4444),
+                color: AppTheme.error,
                 size: 40,
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Oops!',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppTheme.getTextPrimary(widget.isDarkMode),
               ),
             ),
             const SizedBox(height: 12),
@@ -318,7 +321,7 @@ class _ContactSectionState extends State<ContactSection> {
               message,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.white.withValues(alpha:0.7),
+                color: AppTheme.getTextSecondary(widget.isDarkMode),
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -329,7 +332,7 @@ class _ContactSectionState extends State<ContactSection> {
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFEF4444),
+                  backgroundColor: AppTheme.error,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -359,16 +362,15 @@ class _ContactSectionState extends State<ContactSection> {
       padding: context.responsive.sectionPadding,
       child: Column(
         children: [
-          // Animated section header
-          const SectionHeader(
+          SectionHeader(
             label: "Let's Connect",
             title: 'Get in Touch',
             subtitle: "Have a project in mind? Let's create something amazing together.",
+            isDarkMode: widget.isDarkMode,
           ),
 
           const SizedBox(height: 60),
 
-          // Main Content
           if (responsive.isMobile)
             Column(
               children: [
@@ -389,7 +391,6 @@ class _ContactSectionState extends State<ContactSection> {
 
           const SizedBox(height: 80),
 
-          // Footer
           _buildFooter(responsive),
           const SizedBox(height: 40),
         ],
@@ -413,7 +414,6 @@ class _ContactSectionState extends State<ContactSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Contact cards
           _buildContactCard(
             icon: Icons.email_rounded,
             title: 'Email',
@@ -437,19 +437,18 @@ class _ContactSectionState extends State<ContactSection> {
 
           const SizedBox(height: 40),
 
-          // Social Links
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.white.withValues(alpha:0.1),
-                  Colors.white.withValues(alpha:0.05),
+                  AppTheme.glass(0.1, widget.isDarkMode),
+                  AppTheme.glass(0.05, widget.isDarkMode),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withValues(alpha:0.2),
+                color: AppTheme.glassBorder(0.2, widget.isDarkMode),
                 width: 1,
               ),
             ),
@@ -465,12 +464,7 @@ class _ContactSectionState extends State<ContactSection> {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF2563EB),
-                                Color(0xFF9333EA),
-                              ],
-                            ),
+                            gradient: AppTheme.primaryGradient(widget.isDarkMode),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
@@ -480,12 +474,12 @@ class _ContactSectionState extends State<ContactSection> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Text(
+                        Text(
                           'Connect on Social',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            color: AppTheme.getTextPrimary(widget.isDarkMode),
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -497,14 +491,14 @@ class _ContactSectionState extends State<ContactSection> {
                         _buildSocialButton(
                           FontAwesomeIcons.github,
                           'GitHub',
-                          const Color(0xFF2563EB),
+                          AppTheme.getPrimary(widget.isDarkMode),
                           'https://github.com/razasiddiqui55',
                         ),
                         const SizedBox(width: 16),
                         _buildSocialButton(
                           FontAwesomeIcons.linkedin,
                           'LinkedIn',
-                          const Color(0xFF9333EA),
+                          AppTheme.getAccent(widget.isDarkMode),
                           'https://www.linkedin.com/in/hammad-siddiqui-75a124271/',
                         ),
                       ],
@@ -534,13 +528,13 @@ class _ContactSectionState extends State<ContactSection> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.white.withValues(alpha: 0.1),
-                Colors.white.withValues(alpha:0.05),
+                AppTheme.glass(0.1, widget.isDarkMode),
+                AppTheme.glass(0.05, widget.isDarkMode),
               ],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withValues(alpha:0.2),
+              color: AppTheme.glassBorder(0.2, widget.isDarkMode),
               width: 1,
             ),
           ),
@@ -553,16 +547,11 @@ class _ContactSectionState extends State<ContactSection> {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF2563EB),
-                          Color(0xFF9333EA),
-                        ],
-                      ),
+                      gradient: AppTheme.primaryGradient(widget.isDarkMode),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF2563EB).withValues(alpha:0.3),
+                          color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
                           blurRadius: 15,
                           spreadRadius: 1,
                         ),
@@ -583,7 +572,7 @@ class _ContactSectionState extends State<ContactSection> {
                           title,
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white.withValues(alpha:0.7),
+                            color: AppTheme.getTextSecondary(widget.isDarkMode),
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                           ),
@@ -591,9 +580,9 @@ class _ContactSectionState extends State<ContactSection> {
                         const SizedBox(height: 4),
                         Text(
                           value,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
-                            color: Colors.white,
+                            color: AppTheme.getTextPrimary(widget.isDarkMode),
                             fontWeight: FontWeight.w700,
                             letterSpacing: 0.3,
                           ),
@@ -604,7 +593,7 @@ class _ContactSectionState extends State<ContactSection> {
                   if (onTap != null)
                     Icon(
                       Icons.arrow_forward_rounded,
-                      color: Colors.white.withValues(alpha:0.6),
+                      color: AppTheme.getTextSecondary(widget.isDarkMode),
                       size: 20,
                     ),
                 ],
@@ -632,13 +621,13 @@ class _ContactSectionState extends State<ContactSection> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  color.withValues(alpha:0.3),
-                  color.withValues(alpha:0.1),
+                  color.withOpacity(widget.isDarkMode ? 0.3 : 0.2),
+                  color.withOpacity(widget.isDarkMode ? 0.1 : 0.08),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: color.withValues(alpha:0.5),
+                color: color.withOpacity(0.5),
                 width: 1,
               ),
             ),
@@ -646,15 +635,15 @@ class _ContactSectionState extends State<ContactSection> {
               children: [
                 FaIcon(
                   icon,
-                  color: Colors.white,
+                  color: AppTheme.getTextPrimary(widget.isDarkMode),
                   size: 24,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: Colors.white,
+                    color: AppTheme.getTextPrimary(widget.isDarkMode),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -683,20 +672,20 @@ class _ContactSectionState extends State<ContactSection> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white.withValues(alpha:0.1),
-              Colors.white.withValues(alpha:0.05),
+              AppTheme.glass(0.1, widget.isDarkMode),
+              AppTheme.glass(0.05, widget.isDarkMode),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: Colors.white.withValues(alpha:0.2),
+            color: AppTheme.glassBorder(0.2, widget.isDarkMode),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF2563EB).withValues(alpha:0.1),
+              color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.1),
               blurRadius: 40,
               spreadRadius: 5,
             ),
@@ -718,12 +707,7 @@ class _ContactSectionState extends State<ContactSection> {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF2563EB),
-                                Color(0xFF9333EA),
-                              ],
-                            ),
+                            gradient: AppTheme.primaryGradient(widget.isDarkMode),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
@@ -733,12 +717,12 @@ class _ContactSectionState extends State<ContactSection> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Text(
+                        Text(
                           'Send a Message',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            color: AppTheme.getTextPrimary(widget.isDarkMode),
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -802,13 +786,11 @@ class _ContactSectionState extends State<ContactSection> {
                           ),
                           child: Ink(
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF2563EB), Color(0xFF9333EA)],
-                              ),
+                              gradient: AppTheme.primaryGradient(widget.isDarkMode),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF2563EB).withValues(alpha:0.3),
+                                  color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
                                   blurRadius: 20,
                                   spreadRadius: 2,
                                 ),
@@ -829,7 +811,7 @@ class _ContactSectionState extends State<ContactSection> {
                                   : const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.send_rounded, size: 20),
+                                  Icon(Icons.send_rounded, size: 20, color: Colors.white),
                                   SizedBox(width: 10),
                                   Text(
                                     'Send Message',
@@ -837,6 +819,7 @@ class _ContactSectionState extends State<ContactSection> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
                                       letterSpacing: 0.3,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -873,7 +856,7 @@ class _ContactSectionState extends State<ContactSection> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: Colors.white.withValues(alpha:0.9),
+            color: AppTheme.getTextPrimary(widget.isDarkMode),
             letterSpacing: 0.3,
           ),
         ),
@@ -882,56 +865,58 @@ class _ContactSectionState extends State<ContactSection> {
           controller: controller,
           maxLines: maxLines,
           keyboardType: keyboardType,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: AppTheme.getTextPrimary(widget.isDarkMode),
             fontSize: 15,
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-              color: Colors.white.withValues(alpha:0.4),
+              color: AppTheme.getTextSecondary(widget.isDarkMode).withOpacity(0.6),
               fontSize: 14,
             ),
-            prefixIcon: maxLines <= 1 ? Icon(
+            prefixIcon: maxLines <= 1
+                ? Icon(
               icon,
-              color: Colors.white.withValues(alpha:0.6),
+              color: AppTheme.getTextSecondary(widget.isDarkMode),
               size: 20,
-            ) : null,
+            )
+                : null,
             filled: true,
-            fillColor: Colors.white.withValues(alpha:0.05),
+            fillColor: AppTheme.glass(0.05, widget.isDarkMode),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: Colors.white.withValues(alpha:0.2),
+                color: AppTheme.glassBorder(0.2, widget.isDarkMode),
                 width: 1,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: Colors.white.withValues(alpha:0.2),
+                color: AppTheme.glassBorder(0.2, widget.isDarkMode),
                 width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Color(0xFF2563EB),
+              borderSide: BorderSide(
+                color: AppTheme.getPrimary(widget.isDarkMode),
                 width: 2,
               ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                color: Color(0xFFEF4444),
+                color: AppTheme.error,
                 width: 1,
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                color: Color(0xFFEF4444),
+                color: AppTheme.error,
                 width: 2,
               ),
             ),
@@ -964,7 +949,7 @@ class _ContactSectionState extends State<ContactSection> {
               gradient: LinearGradient(
                 colors: [
                   Colors.transparent,
-                  Colors.white.withValues(alpha:0.2),
+                  AppTheme.glassBorder(0.2, widget.isDarkMode),
                   Colors.transparent,
                 ],
               ),
@@ -975,7 +960,7 @@ class _ContactSectionState extends State<ContactSection> {
             '© 2025 Hammad Siddiqui. Built with Flutter & DART ❤️',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withValues(alpha:0.6),
+              color: AppTheme.getTextSecondary(widget.isDarkMode),
               letterSpacing: 0.3,
             ),
             textAlign: TextAlign.center,
@@ -995,7 +980,6 @@ class _ContactSectionState extends State<ContactSection> {
       );
 
       if (!launched) {
-        // fallback to browser launch
         await launchUrl(uri, mode: LaunchMode.platformDefault);
       }
     } catch (e) {
@@ -1003,12 +987,8 @@ class _ContactSectionState extends State<ContactSection> {
     }
   }
 
-
   void _launchWhatsApp(String phoneNumber) async {
-    // Remove any spaces or special characters except +
     final cleanNumber = phoneNumber.replaceAll(RegExp(r'[^\d+]'), '');
-
-    // Create WhatsApp URL with pre-filled message
     final whatsappUrl = 'https://wa.me/$cleanNumber?text=${Uri.encodeComponent('Hi, I found your portfolio and would like to connect!')}';
     final uri = Uri.parse(whatsappUrl);
 

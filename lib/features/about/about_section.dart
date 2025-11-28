@@ -4,9 +4,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hammad_portfolio/core/utils/responsive.dart';
 import 'dart:ui';
 import '../../core/widgets/section_header.dart';
+import '../../core/theme/app_theme.dart';
 
 class AboutSection extends StatefulWidget {
-  const AboutSection({super.key});
+  final bool isDarkMode;
+
+  const AboutSection({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   State<AboutSection> createState() => _AboutSectionState();
@@ -46,15 +52,14 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
       padding: context.responsive.sectionPadding,
       child: Column(
         children: [
-          // Header
-          const SectionHeader(
+          SectionHeader(
             label: 'GET TO KNOW ME',
             title: 'About Me',
+            isDarkMode: widget.isDarkMode,
           ),
 
           const SizedBox(height: 60),
 
-          // Glass card
           AnimatedOpacity(
             opacity: _isVisible ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 800),
@@ -62,14 +67,24 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
               constraints: const BoxConstraints(maxWidth: 1100),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.white.withValues(alpha:0.1), Colors.white.withValues(alpha:0.05)],
+                  colors: [
+                    AppTheme.glass(0.1, widget.isDarkMode),
+                    AppTheme.glass(0.05, widget.isDarkMode)
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha:0.2), width: 1),
+                border: Border.all(
+                    color: AppTheme.glassBorder(0.2, widget.isDarkMode),
+                    width: 1
+                ),
                 boxShadow: [
-                  BoxShadow(color: const Color(0xFF2563EB).withValues(alpha:0.1), blurRadius: 40, spreadRadius: 5),
+                  BoxShadow(
+                      color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.1),
+                      blurRadius: 40,
+                      spreadRadius: 5
+                  ),
                 ],
               ),
               child: ClipRRect(
@@ -141,21 +156,24 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
         height: 220,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            colors: [Color(0xFF2563EB), Color(0xFF9333EA), Color(0xFFEC4899)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppTheme.primaryGradient(widget.isDarkMode),
           boxShadow: [
-            BoxShadow(color: const Color(0xFF9333EA).withValues(alpha:0.5), blurRadius: 40, spreadRadius: 5),
+            BoxShadow(
+                color: AppTheme.getAccent(widget.isDarkMode).withOpacity(0.5),
+                blurRadius: 40,
+                spreadRadius: 5
+            ),
           ],
         ),
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFF1E293B),
-            border: Border.all(color: Colors.white.withValues(alpha:0.1), width: 2),
+            color: AppTheme.getBackgroundLight(widget.isDarkMode),
+            border: Border.all(
+                color: AppTheme.glassBorder(0.1, widget.isDarkMode),
+                width: 2
+            ),
           ),
           child: ClipOval(
             child: Stack(
@@ -164,7 +182,10 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [const Color(0xFF2563EB).withValues(alpha:0.3), const Color(0xFF9333EA).withValues(alpha:0.3)],
+                      colors: [
+                        AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
+                        AppTheme.getAccent(widget.isDarkMode).withOpacity(0.3)
+                      ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -183,28 +204,35 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Greeting
         TweenAnimationBuilder(
           duration: const Duration(milliseconds: 600),
           tween: Tween<double>(begin: 0, end: 1),
           builder: (context, double value, child) {
             return Opacity(
               opacity: value,
-              child: Transform.translate(offset: Offset(0, 20 * (1 - value)), child: child),
+              child: Transform.translate(
+                  offset: Offset(0, 20 * (1 - value)),
+                  child: child
+              ),
             );
           },
           child: ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(colors: [Color(0xFF2563EB), Color(0xFF9333EA)]).createShader(bounds),
+            shaderCallback: (bounds) => AppTheme.primaryGradient(widget.isDarkMode)
+                .createShader(bounds),
             child: Text(
               'Hello! I\'m Hammad 👋',
-              style: TextStyle(fontSize: responsive.isMobile ? 28 : 36, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5),
+              style: TextStyle(
+                  fontSize: responsive.isMobile ? 28 : 36,
+                  fontWeight: FontWeight.w800,
+                  color: AppTheme.getTextPrimary(widget.isDarkMode),
+                  letterSpacing: -0.5
+              ),
             ),
           ),
         ),
         const SizedBox(height: 24),
-        // Paragraphs
         ..._buildAnimatedParagraphs([
-          'I’m a certified Flutter Developer with over two years of professional experience in cross-platform mobile app development. I specialize in building user-friendly, high-performance applications using clean architecture, efficient state management, and Firebase integration. I create modern, pixel-perfect UI/UX designs and write well-structured, maintainable code. I’m currently learning backend technologies to further expand my skill set.',
+          "I'm a certified Flutter Developer with over two years of professional experience in cross-platform mobile app development. I specialize in building user-friendly, high-performance applications using clean architecture, efficient state management, and Firebase integration. I create modern, pixel-perfect UI/UX designs and write well-structured, maintainable code. I'm currently learning backend technologies to further expand my skill set.",
         ], responsive),
       ],
     );
@@ -217,7 +245,10 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
       builder: (context, double value, child) {
         return Opacity(
           opacity: value,
-          child: Transform.translate(offset: Offset(0, 30 * (1 - value)), child: child),
+          child: Transform.translate(
+              offset: Offset(0, 30 * (1 - value)),
+              child: child
+          ),
         );
       },
       child: Wrap(
@@ -240,14 +271,22 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
         builder: (context, double value, child) {
           return Opacity(
             opacity: value,
-            child: Transform.translate(offset: Offset(0, 20 * (1 - value)), child: child),
+            child: Transform.translate(
+                offset: Offset(0, 20 * (1 - value)),
+                child: child
+            ),
           );
         },
         child: Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: Text(
             entry.value,
-            style: TextStyle(fontSize: responsive.isMobile ? 15 : 17, color: Colors.white.withValues(alpha:0.8), height: 1.8, letterSpacing: 0.3),
+            style: TextStyle(
+                fontSize: responsive.isMobile ? 15 : 17,
+                color: AppTheme.getTextSecondary(widget.isDarkMode),
+                height: 1.8,
+                letterSpacing: 0.3
+            ),
           ),
         ),
       );
@@ -260,18 +299,48 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [const Color(0xFF2563EB).withValues(alpha:0.3), const Color(0xFF9333EA).withValues(alpha:0.3)]),
+          gradient: LinearGradient(
+              colors: [
+                AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
+                AppTheme.getAccent(widget.isDarkMode).withOpacity(0.3)
+              ]
+          ),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withValues(alpha:0.2), width: 1),
-          boxShadow: [BoxShadow(color: const Color(0xFF2563EB).withValues(alpha:0.2), blurRadius: 20, spreadRadius: 2)],
+          border: Border.all(
+              color: AppTheme.glassBorder(0.2, widget.isDarkMode),
+              width: 1
+          ),
+          boxShadow: [
+            BoxShadow(
+                color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.2),
+                blurRadius: 20,
+                spreadRadius: 2
+            )
+          ],
         ),
         child: Column(
           children: [
-            Icon(icon, color: Colors.white, size: 24),
+            Icon(icon, color: AppTheme.getTextPrimary(widget.isDarkMode), size: 24),
             const SizedBox(height: 8),
-            Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -0.5)),
+            Text(
+                value,
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.getTextPrimary(widget.isDarkMode),
+                    letterSpacing: -0.5
+                )
+            ),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha:0.8), fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+            Text(
+                label,
+                style: TextStyle(
+                    fontSize: 13,
+                    color: AppTheme.getTextSecondary(widget.isDarkMode),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5
+                )
+            ),
           ],
         ),
       ),
@@ -279,41 +348,14 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
   }
 
   Widget _buildSkillsHighlight(Responsive responsive) {
-    // final skills = [
-    //   '🎯 Flutter & Dart',
-    //   '🔥 Firebase',
-    //   '🏗️ Clean Architecture',
-    //   '⚡ GetX',
-    //   '🎨 UI/UX Design',
-    //   '📱 Cross-Platform',
-    // ];
     final skills = [
-      {
-        'label': 'Flutter & Dart',
-        'icon': 'assets/svg/flutter.svg',
-      },
-      {
-        'label': '🔥 Firebase',
-        'icon': null,
-      },
-      {
-        'label': '🏗️ Clean Architecture',
-        'icon': null,
-      },
-      {
-        'label': '⚡ GetX',
-        'icon': null,
-      },
-      {
-        'label': '🎨 UI/UX Design',
-        'icon': null,
-      },
-      {
-        'label': '📱 Cross-Platform',
-        'icon': null,
-      },
+      {'label': 'Flutter & Dart', 'icon': 'assets/svg/flutter.svg'},
+      {'label': '🔥 Firebase', 'icon': null},
+      {'label': '🏗️ Clean Architecture', 'icon': null},
+      {'label': '⚡ GetX', 'icon': null},
+      {'label': '🎨 UI/UX Design', 'icon': null},
+      {'label': '📱 Cross-Platform', 'icon': null},
     ];
-
 
     return TweenAnimationBuilder(
       duration: const Duration(milliseconds: 1200),
@@ -324,9 +366,17 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.white.withValues(alpha:0.05), Colors.white.withValues(alpha:0.02)]),
+          gradient: LinearGradient(
+              colors: [
+                AppTheme.glass(0.05, widget.isDarkMode),
+                AppTheme.glass(0.02, widget.isDarkMode)
+              ]
+          ),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withValues(alpha:0.1), width: 1),
+          border: Border.all(
+              color: AppTheme.glassBorder(0.1, widget.isDarkMode),
+              width: 1
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,11 +385,25 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF2563EB), Color(0xFF9333EA)]), borderRadius: BorderRadius.circular(8)),
-                  child: const Icon(Icons.code_rounded, color: Colors.white, size: 20),
+                  decoration: BoxDecoration(
+                      gradient: AppTheme.primaryGradient(widget.isDarkMode),
+                      borderRadius: BorderRadius.circular(8)
+                  ),
+                  child: Icon(
+                      Icons.code_rounded,
+                      color: AppTheme.getTextPrimary(widget.isDarkMode),
+                      size: 20
+                  ),
                 ),
                 const SizedBox(width: 12),
-                Text('Core Expertise', style: TextStyle(fontSize: responsive.isMobile ? 16 : 18, fontWeight: FontWeight.w700, color: Colors.white)),
+                Text(
+                    'Core Expertise',
+                    style: TextStyle(
+                        fontSize: responsive.isMobile ? 16 : 18,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.getTextPrimary(widget.isDarkMode)
+                    )
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -355,29 +419,26 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.white.withValues(alpha:0.1),
-                        Colors.white.withValues(alpha:0.05)
+                        AppTheme.glass(0.1, widget.isDarkMode),
+                        AppTheme.glass(0.05, widget.isDarkMode)
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white.withValues(alpha:0.2), width: 1),
+                    border: Border.all(
+                        color: AppTheme.glassBorder(0.2, widget.isDarkMode),
+                        width: 1
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (iconPath != null)
-                        SvgPicture.asset(
-                          iconPath,
-                          width: 15,
-                          height: 15,
-                        ),
-
+                        SvgPicture.asset(iconPath, width: 15, height: 15),
                       if (iconPath != null) const SizedBox(width: 8),
-
                       Text(
                         label.toString(),
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha:0.9),
+                          color: AppTheme.getTextSecondary(widget.isDarkMode),
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),

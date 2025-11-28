@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_provider.dart';
 import 'core/widgets/animated_background.dart';
 import 'core/widgets/app_navigation.dart';
 import 'features/home/hero_section.dart';
-import 'package:hammad_portfolio/features/about/about_section.dart';
-import 'package:hammad_portfolio/features/contact/contact_section.dart';
-import 'package:hammad_portfolio/features/education/education_section.dart';
-import 'package:hammad_portfolio/features/experience/experience_section.dart';
-import 'package:hammad_portfolio/features/projects/projects_section.dart';
-import 'package:hammad_portfolio/features/skills/skills_section.dart';
+import 'features/about/about_section.dart';
+import 'features/contact/contact_section.dart';
+import 'features/education/education_section.dart';
+import 'features/experience/experience_section.dart';
+import 'features/projects/projects_section.dart';
+import 'features/skills/skills_section.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyPortfolioApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyPortfolioApp(),
+    ),
+  );
 }
 
 class MyPortfolioApp extends StatelessWidget {
@@ -21,25 +28,38 @@ class MyPortfolioApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hammad Siddiqui - Flutter Developer',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppTheme.primary,
-          brightness: Brightness.dark,
-        ),
-        textTheme: GoogleFonts.interTextTheme(),
-        scaffoldBackgroundColor: AppTheme.background,
-      ),
-      home: const PortfolioHome(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Hammad Siddiqui - Flutter Developer',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: themeProvider.isDarkMode
+                  ? AppTheme.darkPrimary
+                  : AppTheme.lightPrimary,
+              brightness: themeProvider.isDarkMode
+                  ? Brightness.dark
+                  : Brightness.light,
+            ),
+            textTheme: GoogleFonts.interTextTheme(),
+            scaffoldBackgroundColor: AppTheme.getBackground(themeProvider.isDarkMode),
+          ),
+          home: PortfolioHome(isDarkMode: themeProvider.isDarkMode),
+        );
+      },
     );
   }
 }
 
 class PortfolioHome extends StatefulWidget {
-  const PortfolioHome({super.key});
+  final bool isDarkMode;
+
+  const PortfolioHome({
+    super.key,
+    required this.isDarkMode,
+  });
 
   @override
   State<PortfolioHome> createState() => _PortfolioHomeState();
@@ -110,7 +130,7 @@ class _PortfolioHomeState extends State<PortfolioHome> {
       body: Stack(
         children: [
           // Animated Background
-          const AnimatedBackground(),
+          AnimatedBackground(isDarkMode: widget.isDarkMode),
 
           // Content
           SingleChildScrollView(
@@ -122,57 +142,64 @@ class _PortfolioHomeState extends State<PortfolioHome> {
                 HeroSection(
                   key: _sectionKeys[0],
                   onContactPressed: () => _scrollToSection(6),
+                  isDarkMode: widget.isDarkMode,
                 ),
 
-                // About Section (Use your refactored version)
+                // About Section
                 Container(
                   key: _sectionKeys[1],
                   constraints: const BoxConstraints(minHeight: 800),
-                  child: AboutSection(),
+                  child: AboutSection(isDarkMode: widget.isDarkMode),
                 ),
 
                 // Education Section
                 Container(
                   key: _sectionKeys[2],
                   constraints: const BoxConstraints(minHeight: 800),
-                  child: EducationSection(),
+                  child: EducationSection(isDarkMode: widget.isDarkMode),
                 ),
 
                 // Experience Section
                 Container(
                   key: _sectionKeys[3],
                   constraints: const BoxConstraints(minHeight: 800),
-                  child: ExperienceSection(),
+                  child: ExperienceSection(isDarkMode: widget.isDarkMode),
                 ),
 
                 // Skills Section
                 Container(
                   key: _sectionKeys[4],
                   constraints: const BoxConstraints(minHeight: 800),
-                  child: SkillsSection(),
+                  child: SkillsSection(isDarkMode: widget.isDarkMode),
                 ),
 
                 // Projects Section
                 Container(
                   key: _sectionKeys[5],
                   constraints: const BoxConstraints(minHeight: 800),
-                  child: ProjectsSection(),
+                  child: ProjectsSection(isDarkMode: widget.isDarkMode),
                 ),
 
                 // Contact Section
                 Container(
                   key: _sectionKeys[6],
                   constraints: const BoxConstraints(minHeight: 800),
-                  child: ContactSection(),
+                  child: ContactSection(isDarkMode: widget.isDarkMode),
                 ),
               ],
             ),
           ),
 
           // Navigation Bar
-          AppNavigation(
-            activeSection: _activeSection,
-            onNavigate: _scrollToSection,
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return AppNavigation(
+                activeSection: _activeSection,
+                onNavigate: _scrollToSection,
+                isDarkMode: themeProvider.isDarkMode,
+                onThemeToggle: themeProvider.toggleTheme,
+              );
+            },
           ),
         ],
       ),
