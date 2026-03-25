@@ -333,7 +333,7 @@ class _HeroSectionState extends State<HeroSection>
   }
 
   void _downloadCV() async {
-    const url = 'https://drive.google.com/file/d/1n9YDOE4z50YoIcK43Lp00ScnNXgfLQCI/view?usp=sharing';
+    const url = 'https://drive.google.com/file/d/1deG-qK6HgBDZtzwk-Sfbn_dlrNCOpeQj/view?usp=sharing';
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);

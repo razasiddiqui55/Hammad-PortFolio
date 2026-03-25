@@ -44,9 +44,12 @@ class MyPortfolioApp extends StatelessWidget {
                   : Brightness.light,
             ),
             textTheme: GoogleFonts.interTextTheme(),
-            scaffoldBackgroundColor: AppTheme.getBackground(themeProvider.isDarkMode),
+            scaffoldBackgroundColor:
+            AppTheme.getBackground(themeProvider.isDarkMode),
           ),
-          home: PortfolioHome(isDarkMode: themeProvider.isDarkMode),
+          // ✅ isDarkMode ab MaterialApp ke andar pass ho raha hai
+          // isliye PortfolioHome ko prop ki zaroorat nahi
+          home: const PortfolioHome(),
         );
       },
     );
@@ -54,12 +57,7 @@ class MyPortfolioApp extends StatelessWidget {
 }
 
 class PortfolioHome extends StatefulWidget {
-  final bool isDarkMode;
-
-  const PortfolioHome({
-    super.key,
-    required this.isDarkMode,
-  });
+  const PortfolioHome({super.key});
 
   @override
   State<PortfolioHome> createState() => _PortfolioHomeState();
@@ -126,83 +124,86 @@ class _PortfolioHomeState extends State<PortfolioHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Animated Background
-          AnimatedBackground(isDarkMode: widget.isDarkMode),
+    // ✅ Ek baar Consumer yahan, sab sections ko isDarkMode milega
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        final isDark = themeProvider.isDarkMode;
 
-          // Content
-          SingleChildScrollView(
-            controller: _scrollController,
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                // Hero Section
-                HeroSection(
-                  key: _sectionKeys[0],
-                  onContactPressed: () => _scrollToSection(6),
-                  isDarkMode: widget.isDarkMode,
+        return Scaffold(
+          body: Stack(
+            children: [
+              // Animated Background
+              AnimatedBackground(isDarkMode: isDark),
+
+              // Content
+              SingleChildScrollView(
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    // Hero Section
+                    HeroSection(
+                      key: _sectionKeys[0],
+                      onContactPressed: () => _scrollToSection(6),
+                      isDarkMode: isDark,
+                    ),
+
+                    // About Section
+                    Container(
+                      key: _sectionKeys[1],
+                      constraints: const BoxConstraints(minHeight: 800),
+                      child: AboutSection(isDarkMode: isDark),
+                    ),
+
+                    // Education Section
+                    Container(
+                      key: _sectionKeys[2],
+                      constraints: const BoxConstraints(minHeight: 800),
+                      child: EducationSection(isDarkMode: isDark),
+                    ),
+
+                    // Experience Section
+                    Container(
+                      key: _sectionKeys[3],
+                      constraints: const BoxConstraints(minHeight: 800),
+                      child: ExperienceSection(isDarkMode: isDark),
+                    ),
+
+                    // Skills Section
+                    Container(
+                      key: _sectionKeys[4],
+                      constraints: const BoxConstraints(minHeight: 800),
+                      child: SkillsSection(isDarkMode: isDark),
+                    ),
+
+                    // Projects Section
+                    Container(
+                      key: _sectionKeys[5],
+                      constraints: const BoxConstraints(minHeight: 800),
+                      child: ProjectsSection(isDarkMode: isDark),
+                    ),
+
+                    // Contact Section
+                    Container(
+                      key: _sectionKeys[6],
+                      constraints: const BoxConstraints(minHeight: 800),
+                      child: ContactSection(isDarkMode: isDark),
+                    ),
+                  ],
                 ),
+              ),
 
-                // About Section
-                Container(
-                  key: _sectionKeys[1],
-                  constraints: const BoxConstraints(minHeight: 800),
-                  child: AboutSection(isDarkMode: widget.isDarkMode),
-                ),
-
-                // Education Section
-                Container(
-                  key: _sectionKeys[2],
-                  constraints: const BoxConstraints(minHeight: 800),
-                  child: EducationSection(isDarkMode: widget.isDarkMode),
-                ),
-
-                // Experience Section
-                Container(
-                  key: _sectionKeys[3],
-                  constraints: const BoxConstraints(minHeight: 800),
-                  child: ExperienceSection(isDarkMode: widget.isDarkMode),
-                ),
-
-                // Skills Section
-                Container(
-                  key: _sectionKeys[4],
-                  constraints: const BoxConstraints(minHeight: 800),
-                  child: SkillsSection(isDarkMode: widget.isDarkMode),
-                ),
-
-                // Projects Section
-                Container(
-                  key: _sectionKeys[5],
-                  constraints: const BoxConstraints(minHeight: 800),
-                  child: ProjectsSection(isDarkMode: widget.isDarkMode),
-                ),
-
-                // Contact Section
-                Container(
-                  key: _sectionKeys[6],
-                  constraints: const BoxConstraints(minHeight: 800),
-                  child: ContactSection(isDarkMode: widget.isDarkMode),
-                ),
-              ],
-            ),
-          ),
-
-          // Navigation Bar
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, child) {
-              return AppNavigation(
+              // Navigation Bar
+              AppNavigation(
                 activeSection: _activeSection,
                 onNavigate: _scrollToSection,
-                isDarkMode: themeProvider.isDarkMode,
+                isDarkMode: isDark,
                 onThemeToggle: themeProvider.toggleTheme,
-              );
-            },
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
