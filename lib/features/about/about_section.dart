@@ -232,7 +232,7 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
         ),
         const SizedBox(height: 24),
         ..._buildAnimatedParagraphs([
-          "I'm a Flutter Developer with 3+ years of professional experience in cross-platform mobile app development. I specialize in building user-friendly, high-performance applications using clean architecture, efficient state management, and Firebase integration. I create modern, pixel-perfect UI/UX designs and write well-structured, maintainable code. I'm currently expanding my skill set into backend development with PHP (Laravel).",
+          "I'm a Flutter Developer with 2+ Years of professional experience in cross-platform mobile app development. I specialize in building user-friendly, high-performance applications using clean architecture, efficient state management, and Firebase integration. I create modern, pixel-perfect UI/UX designs and write well-structured, maintainable code. I'm currently expanding my skill set into backend development with PHP (Laravel).",
         ], responsive),
       ],
     );
