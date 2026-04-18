@@ -255,8 +255,8 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
         spacing: 16,
         runSpacing: 16,
         children: [
-          _buildStatCard(context, '15+', 'Projects', FontAwesomeIcons.briefcase),
-          _buildStatCard(context, '3+', 'Years', FontAwesomeIcons.solidClock),
+          _buildStatCard(context, '10+', 'Projects', FontAwesomeIcons.briefcase),
+          _buildStatCard(context, '2+', 'Years', FontAwesomeIcons.solidClock),
           _buildStatCard(context, '100%', 'Satisfaction', FontAwesomeIcons.solidThumbsUp),
         ],
       ),

@@ -424,7 +424,7 @@ class _ContactSectionState extends State<ContactSection> {
           _buildContactCard(
             icon: Icons.location_on_rounded,
             title: 'Location',
-            value: 'Multan, Punjab, Pakistan',
+            value: 'Lahore, Punjab, Pakistan',
             onTap: null,
           ),
           const SizedBox(height: 20),
