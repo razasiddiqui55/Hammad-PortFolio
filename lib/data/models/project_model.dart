@@ -23,7 +23,7 @@ class ProjectModel {
         'I built a 3D car booking app that makes it easy for users to book rides for events or business travel. The app includes an interactive 3D car model, Stripe payment integration, and real-time chat for quick support, making the booking process faster and more engaging.',
         technologies: ['Flutter', '3D Model', 'Stripe', 'GetX', 'REST API'],
         githubUrl: '',
-        liveUrl: '',
+        liveUrl: 'https://apps.apple.com/us/app/autohaus-car-rental/id6463710495',
         imagePath: '🚗',
       ),
       ProjectModel(
@@ -32,7 +32,7 @@ class ProjectModel {
         'Developed a feature-rich notes application where users can organize voice recordings, images, and text notes in a hierarchical tree structure. Implemented a drag-and-click system allowing users to set the order of notes easily. Designed an intuitive interface for efficient creation, management, and retrieval of notes, while ensuring secure and consistent data storage.',
         technologies: ['Flutter', 'GetX', 'REST API', 'Audio Recording', 'Note Ordering'],
         githubUrl: '',
-        liveUrl: '',
+        liveUrl: 'https://apkcombo.com/es/folder-tree-voice-notes/com.ftvnr.app/',
         imagePath: '🎙️',
       ),
       ProjectModel(
@@ -50,7 +50,7 @@ class ProjectModel {
         'Developed Deliver by GFL, a logistics app that enables individuals and businesses to send packages with ease. Users can create delivery orders, track their shipments in real time, and access various delivery options. The app emphasizes speed, reliability, and eco-conscious transportation.',
         technologies: ['Flutter', 'Provider', 'REST API', 'Pay Stack', 'Push Notifications', 'Location Services'],
         githubUrl: '',
-        liveUrl: '',
+        liveUrl: 'https://apps.apple.com/us/app/deliver-by-gfl/id6473718847',
         imagePath: '📦',
       ),
       ProjectModel(
@@ -59,7 +59,7 @@ class ProjectModel {
         'Deliver Partner is a mobile application developed for GFL (Golden Fleet Logistics) partners, including riders and fleet owners. The app allows delivery partners to efficiently accept and manage delivery requests, track orders in real time, view earnings and delivery history, and access support from the GFL team. Designed to optimize operations and ensure timely deliveries, it provides a seamless interface with features like real-time tracking, notifications, and secure management of delivery data.',
         technologies: ['Flutter', 'Provider', 'REST API', 'Pay Stack', 'Push Notifications', 'Location Services'],
         githubUrl: '',
-        liveUrl: '',
+        liveUrl: 'https://apps.apple.com/us/app/deliver-by-gfl/id6473718847',
         imagePath: '🚴',
       ),
       ProjectModel(
@@ -77,7 +77,7 @@ class ProjectModel {
         'Earthnique is a two-sided e-commerce app built for clients and vendors, offering services, products, shops, carts, and real-time chat. Vendors can create and manage their shops, set availability, add services/products, run promotions, and manage subscriptions, while clients can set multiple locations, filter by category/date/time, and book or purchase easily. The app also includes admin chat support, FAQs, and video guides for a smooth onboarding and user experience.',
         technologies: ['Flutter', 'GetX', 'REST API', 'Real-Time Chat', 'Payment Gateway', 'Push Notifications'],
         githubUrl: '',
-        liveUrl: '',
+        liveUrl: 'https://play.google.com/store/apps/details?id=com.earthnique.app&pcampaignid=web_share',
         imagePath: '🛒',
       ),
       ProjectModel(

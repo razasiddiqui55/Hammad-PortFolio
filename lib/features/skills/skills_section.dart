@@ -354,7 +354,7 @@ class _AnimatedSkillCardState extends State<_AnimatedSkillCard> {
   IconData _getSkillIcon(String skillName) {
     final iconMap = {
       'Flutter & Dart': Icons.flutter_dash,
-      'GetX State Management': Icons.settings_suggest_rounded,
+      'State Management': Icons.settings_suggest_rounded,
       'Firebase Integration': Icons.local_fire_department_rounded,
       'REST APIs': Icons.api_rounded,
       'Clean Architecture': Icons.architecture_rounded,

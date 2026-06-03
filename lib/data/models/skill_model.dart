@@ -12,7 +12,7 @@ class SkillModel {
   static List<SkillModel> getSkills() {
     return [
       SkillModel(name: 'Flutter & Dart', proficiency: 95, icon: '📱'),
-      SkillModel(name: 'GetX State Management', proficiency: 90, icon: '⚡'),
+      SkillModel(name: 'State Management', proficiency: 90, icon: '⚡'),
       SkillModel(name: 'Firebase Integration', proficiency: 88, icon: '🔥'),
       SkillModel(name: 'REST APIs', proficiency: 92, icon: '🔌'),
       SkillModel(name: 'Clean Architecture', proficiency: 85, icon: '🏗️'),

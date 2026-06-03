@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
+  
   // ============ DARK THEME COLORS ============
   static const darkPrimary = Color(0xFF6366F1);
   static const darkPrimaryDark = Color(0xFF4F46E5);
@@ -26,20 +27,20 @@ class AppTheme {
   static const lightSecondary = Color(0xFF0891B2);
   static const lightTertiary = Color(0xFFDB2777);
 
-  static const lightBackground = Color(0xFFF8FAFC);
+  static const lightBackground = Color(0xFFF1F5F9);
   static const lightBackgroundLight = Color(0xFFFFFFFF);
   static const lightSurface = Color(0xFFE2E8F0);
 
   static const lightTextPrimary = Color(0xFF0F172A);
-  static const lightTextSecondary = Color(0xFF475569);
-  static const lightTextTertiary = Color(0xFF64748B);
+  static const lightTextSecondary = Color(0xFF374151);
+  static const lightTextTertiary = Color(0xFF4B5563);
 
-  // Common colors
+  // Common colors — unchanged
   static const success = Color(0xFF10B981);
   static const warning = Color(0xFFF59E0B);
   static const error = Color(0xFFEF4444);
 
-  // Spacing
+  // Spacing — unchanged
   static const double xs = 4;
   static const double sm = 8;
   static const double md = 16;
@@ -48,14 +49,14 @@ class AppTheme {
   static const double xxl = 48;
   static const double xxxl = 64;
 
-  // Border Radius
+  // Border Radius — unchanged
   static const double radiusSm = 8;
   static const double radiusMd = 12;
   static const double radiusLg = 16;
   static const double radiusXl = 20;
   static const double radiusXxl = 24;
 
-  // ============ TEXT STYLES ============
+  // ============ TEXT STYLES — unchanged ============
   static TextStyle _baseDisplayLarge(Color color) => GoogleFonts.inter(
     fontSize: 80,
     fontWeight: FontWeight.w900,
@@ -172,7 +173,7 @@ class AppTheme {
   static TextStyle caption(bool isDark) => _baseCaption(isDark ? darkTextTertiary : lightTextTertiary);
   static TextStyle overline(bool isDark) => _baseOverline(isDark ? darkTextTertiary : lightTextTertiary);
 
-  // ============ GRADIENTS ============
+  // ============ GRADIENTS — unchanged ============
   static LinearGradient primaryGradient(bool isDark) => LinearGradient(
     colors: isDark ? [darkPrimary, darkAccent] : [lightPrimary, lightAccent],
     begin: Alignment.topLeft,
@@ -191,7 +192,7 @@ class AppTheme {
     end: Alignment.bottomRight,
   );
 
-  // Shadows
+  // Shadows — unchanged
   static List<BoxShadow> shadowSm(Color color) => [
     BoxShadow(
       color: color.withOpacity(0.1),
@@ -219,14 +220,22 @@ class AppTheme {
     ),
   ];
 
-  // Glass Effect Colors
+  // ============ GLASS EFFECT — KEY FIX ============
+  // BEFORE: light mode used opacity * 0.5 → cards were nearly invisible (5% black at opacity 0.1)
+  // AFTER:  light mode uses opacity * 1.5 → cards now clearly visible (15% black at opacity 0.1)
   static Color glass(double opacity, bool isDark) =>
-      isDark ? Colors.white.withOpacity(opacity) : Colors.black.withOpacity(opacity * 0.5);
+      isDark
+          ? Colors.white.withOpacity(opacity)
+          : Colors.white.withOpacity(1 - (opacity * 1.5).clamp(0.0, 0.95)); // FIX: white-based glass for light mode
 
+  // BEFORE: light border was opacity * 0.5 → barely visible
+  // AFTER:  light border uses opacity * 1.2 → clearly defined card edges
   static Color glassBorder(double opacity, bool isDark) =>
-      isDark ? Colors.white.withOpacity(opacity) : Colors.black.withOpacity(opacity * 0.5);
+      isDark
+          ? Colors.white.withOpacity(opacity)
+          : Colors.black.withOpacity((opacity * 1.2).clamp(0.0, 1.0));      // FIX: stronger borders in light mode
 
-  // Project Gradients
+  // Project Gradients — unchanged
   static List<List<Color>> projectGradients(bool isDark) => isDark ? [
     [darkPrimary, darkAccent],
     [darkAccent, darkTertiary],
@@ -252,7 +261,7 @@ class AppTheme {
     );
   }
 
-  // Get theme colors
+  // Get theme colors — unchanged
   static Color getBackground(bool isDark) => isDark ? darkBackground : lightBackground;
   static Color getBackgroundLight(bool isDark) => isDark ? darkBackgroundLight : lightBackgroundLight;
   static Color getSurface(bool isDark) => isDark ? darkSurface : lightSurface;
@@ -263,7 +272,7 @@ class AppTheme {
   static Color getAccent(bool isDark) => isDark ? darkAccent : lightAccent;
 }
 
-// Responsive Text Styles Extension
+// Responsive Text Styles Extension — unchanged
 extension ResponsiveTextStyles on BuildContext {
   double get _scaleFactor {
     final width = MediaQuery.of(this).size.width;

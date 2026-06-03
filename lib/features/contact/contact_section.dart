@@ -957,7 +957,7 @@ class _ContactSectionState extends State<ContactSection> {
           ),
           const SizedBox(height: 40),
           Text(
-            '© 2025 Hammad Siddiqui. Built with Flutter & DART ❤️',
+            '© 2026 Hammad Siddiqui. Built with Flutter & DART ❤️',
             style: TextStyle(
               fontSize: 14,
               color: AppTheme.getTextSecondary(widget.isDarkMode),
