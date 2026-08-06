@@ -232,7 +232,7 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
         ),
         const SizedBox(height: 24),
         ..._buildAnimatedParagraphs([
-          "I'm a Flutter Developer with 2+ Years of professional experience in cross-platform mobile app development. I specialize in building user-friendly, high-performance applications using clean architecture, efficient state management, and Firebase integration. I create modern, pixel-perfect UI/UX designs and write well-structured, maintainable code. I'm currently expanding my skill set into backend development with PHP (Laravel).",
+          "I'm a Flutter Developer with 3 Years of professional experience delivering scalable, high-performance cross-platform apps across sports, logistics, job marketplace, and safety domains. I specialize in Clean Architecture, state management (GetX/Provider), Firebase, REST APIs, and real-time features like payment integrations and push notifications. I create modern, pixel-perfect UI/UX designs and write well-structured, maintainable code.",
         ], responsive),
       ],
     );
@@ -256,7 +256,7 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
         runSpacing: 16,
         children: [
           _buildStatCard(context, '10+', 'Projects', FontAwesomeIcons.briefcase),
-          _buildStatCard(context, '2+', 'Years', FontAwesomeIcons.solidClock),
+          _buildStatCard(context, '3', 'Years', FontAwesomeIcons.solidClock),
           _buildStatCard(context, '100%', 'Satisfaction', FontAwesomeIcons.solidThumbsUp),
         ],
       ),

@@ -18,6 +18,33 @@ class ProjectModel {
   static List<ProjectModel> getSampleProjects() {
     return [
       ProjectModel(
+        title: 'All Sports Passport',
+        description:
+        'A sports session discovery app that helps users find and join local sports sessions near them. Built city and location-based search, nearby-session discovery with live distance filtering, sport-category chip filters, and a secure signup flow with email OTP verification. Currently in active development at Digital Preps.',
+        technologies: ['Flutter', 'GetX', 'REST API', 'Google Maps', 'OTP Verification'],
+        githubUrl: '',
+        liveUrl: '',
+        imagePath: '🏅',
+      ),
+      ProjectModel(
+        title: 'Find A Job',
+        description:
+        'A dual-sided UK job marketplace connecting employees and employers. Built the full employer job-posting flow (shift scheduling, applicant tracking, reviews), employee CV upload, and real-time FCM push notifications for application updates. Currently in active development at Digital Preps.',
+        technologies: ['Flutter', 'Firebase', 'FCM Push Notifications', 'REST API', 'File Picker'],
+        githubUrl: '',
+        liveUrl: '',
+        imagePath: '💼',
+      ),
+      ProjectModel(
+        title: 'Secure Safe Trust',
+        description:
+        'A personal safety app that triggers an emergency alert cycle — looping alarm sound, continuous vibration, and automatic SMS alerts to trusted contacts — with a manual SMS fallback screen and auto-restart monitoring after each cycle. Currently in active development at Digital Preps.',
+        technologies: ['Flutter', 'GetX', 'SMS Integration', 'Location Services', 'Local Notifications'],
+        githubUrl: '',
+        liveUrl: '',
+        imagePath: '🛡️',
+      ),
+      ProjectModel(
         title: 'AutoHaus Car Rental',
         description:
         'I built a 3D car booking app that makes it easy for users to book rides for events or business travel. The app includes an interactive 3D car model, Stripe payment integration, and real-time chat for quick support, making the booking process faster and more engaging.',

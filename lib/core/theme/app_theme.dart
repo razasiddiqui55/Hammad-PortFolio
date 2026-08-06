@@ -3,35 +3,36 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   
-  // ============ DARK THEME COLORS ============
-  static const darkPrimary = Color(0xFF6366F1);
-  static const darkPrimaryDark = Color(0xFF4F46E5);
-  static const darkAccent = Color(0xFFA855F7);
-  static const darkAccentDark = Color(0xFF9333EA);
-  static const darkSecondary = Color(0xFF06B6D4);
-  static const darkTertiary = Color(0xFFEC4899);
+  // ============ DARK THEME COLORS — Premium Futuristic Tech ============
+  // Cyan + purple duo on a deep navy/black canvas
+  static const darkPrimary = Color(0xFF22D3EE);      // electric cyan
+  static const darkPrimaryDark = Color(0xFF06B6D4);   // deeper cyan
+  static const darkAccent = Color(0xFF8B5CF6);        // violet/purple
+  static const darkAccentDark = Color(0xFF7C3AED);    // deeper violet
+  static const darkSecondary = Color(0xFF38BDF8);     // sky-cyan (secondary highlight)
+  static const darkTertiary = Color(0xFFC084FC);      // soft purple (used sparingly)
 
-  static const darkBackground = Color(0xFF0F172A);
-  static const darkBackgroundLight = Color(0xFF1E293B);
-  static const darkSurface = Color(0xFF334155);
+  static const darkBackground = Color(0xFF05070D);       // near-black navy canvas
+  static const darkBackgroundLight = Color(0xFF0B0F1C);  // slightly lifted navy panel
+  static const darkSurface = Color(0xFF141A2E);          // card/surface navy
 
-  static const darkTextPrimary = Color(0xFFF8FAFC);
-  static const darkTextSecondary = Color(0xFFCBD5E1);
-  static const darkTextTertiary = Color(0xFF94A3B8);
+  static const darkTextPrimary = Color(0xFFF3F6FC);
+  static const darkTextSecondary = Color(0xFFAEB9D4);
+  static const darkTextTertiary = Color(0xFF7C8AAE);
 
   // ============ LIGHT THEME COLORS ============
-  static const lightPrimary = Color(0xFF4F46E5);
-  static const lightPrimaryDark = Color(0xFF4338CA);
-  static const lightAccent = Color(0xFF9333EA);
-  static const lightAccentDark = Color(0xFF7E22CE);
-  static const lightSecondary = Color(0xFF0891B2);
-  static const lightTertiary = Color(0xFFDB2777);
+  static const lightPrimary = Color(0xFF0891B2);
+  static const lightPrimaryDark = Color(0xFF0E7490);
+  static const lightAccent = Color(0xFF7C3AED);
+  static const lightAccentDark = Color(0xFF6D28D9);
+  static const lightSecondary = Color(0xFF0284C7);
+  static const lightTertiary = Color(0xFF9333EA);
 
-  static const lightBackground = Color(0xFFF1F5F9);
+  static const lightBackground = Color(0xFFF3F6FB);
   static const lightBackgroundLight = Color(0xFFFFFFFF);
-  static const lightSurface = Color(0xFFE2E8F0);
+  static const lightSurface = Color(0xFFE4E9F3);
 
-  static const lightTextPrimary = Color(0xFF0F172A);
+  static const lightTextPrimary = Color(0xFF0B0F1C);
   static const lightTextSecondary = Color(0xFF374151);
   static const lightTextTertiary = Color(0xFF4B5563);
 
@@ -220,36 +221,37 @@ class AppTheme {
     ),
   ];
 
-  // ============ GLASS EFFECT — KEY FIX ============
-  // BEFORE: light mode used opacity * 0.5 → cards were nearly invisible (5% black at opacity 0.1)
-  // AFTER:  light mode uses opacity * 1.5 → cards now clearly visible (15% black at opacity 0.1)
+  // ============ GLASS EFFECT — Premium glassmorphism ============
+  // Dark mode: cool cyan-tinted white glass for a "frosted display" feel.
+  // Light mode: white-based glass so cards stay clearly visible.
   static Color glass(double opacity, bool isDark) =>
       isDark
-          ? Colors.white.withOpacity(opacity)
-          : Colors.white.withOpacity(1 - (opacity * 1.5).clamp(0.0, 0.95)); // FIX: white-based glass for light mode
+          ? const Color(0xFFCFF4FF).withOpacity(opacity)
+          : Colors.white.withOpacity(1 - (opacity * 1.5).clamp(0.0, 0.95));
 
-  // BEFORE: light border was opacity * 0.5 → barely visible
-  // AFTER:  light border uses opacity * 1.2 → clearly defined card edges
+  // Dark mode border gets a faint cyan tint instead of flat white for a
+  // "glowing edge" look; light mode keeps crisp dark borders.
   static Color glassBorder(double opacity, bool isDark) =>
       isDark
-          ? Colors.white.withOpacity(opacity)
-          : Colors.black.withOpacity((opacity * 1.2).clamp(0.0, 1.0));      // FIX: stronger borders in light mode
+          ? const Color(0xFF9AE8FF).withOpacity((opacity * 0.9).clamp(0.0, 1.0))
+          : Colors.black.withOpacity((opacity * 1.2).clamp(0.0, 1.0));
 
-  // Project Gradients — unchanged
+  // Project Gradients — kept within the cyan/purple family for a cohesive,
+  // premium tech palette (no scattered rainbow accents).
   static List<List<Color>> projectGradients(bool isDark) => isDark ? [
     [darkPrimary, darkAccent],
     [darkAccent, darkTertiary],
-    [darkTertiary, warning],
-    [success, darkSecondary],
     [darkSecondary, darkPrimary],
-    [warning, error],
+    [success, darkSecondary],
+    [darkTertiary, darkPrimaryDark],
+    [darkAccentDark, darkSecondary],
   ] : [
     [lightPrimary, lightAccent],
     [lightAccent, lightTertiary],
-    [lightTertiary, warning],
-    [success, lightSecondary],
     [lightSecondary, lightPrimary],
-    [warning, error],
+    [success, lightSecondary],
+    [lightTertiary, lightPrimaryDark],
+    [lightAccentDark, lightSecondary],
   ];
 
   static LinearGradient getProjectGradient(int index, bool isDark) {

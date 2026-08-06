@@ -6,6 +6,7 @@ import '../../core/utils/responsive.dart';
 import '../../core/widgets/glass_container.dart';
 import '../../core/widgets/gradient_button.dart';
 import '../../core/widgets/fade_in_slide.dart';
+import '../../core/widgets/hero_visual.dart';
 
 class HeroSection extends StatefulWidget {
   final VoidCallback onContactPressed;
@@ -64,79 +65,120 @@ class _HeroSectionState extends State<HeroSection>
       child: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: responsive.contentMaxWidth),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Status Badge
-              FadeInSlide(
-                delay: const Duration(milliseconds: 100),
-                child: _buildStatusBadge(),
-              ),
-
-              SizedBox(height: responsive.value(
-                mobile: 24.0,
-                tablet: 32.0,
-                desktop: 40.0,
-              )),
-
-              // Name
-              FadeInSlide(
-                delay: const Duration(milliseconds: 300),
-                child: _buildName(context, responsive),
-              ),
-
-              SizedBox(height: responsive.value(
-                mobile: 20.0,
-                tablet: 24.0,
-                desktop: 32.0,
-              )),
-
-              // Role Switcher
-              FadeInSlide(
-                delay: const Duration(milliseconds: 500),
-                child: _buildRoleSwitcher(context, responsive),
-              ),
-
-              SizedBox(height: responsive.value(
-                mobile: 20.0,
-                tablet: 24.0,
-                desktop: 32.0,
-              )),
-
-              // Description
-              FadeInSlide(
-                delay: const Duration(milliseconds: 700),
-                child: _buildDescription(context, responsive),
-              ),
-
-              SizedBox(height: responsive.value(
-                mobile: 32.0,
-                tablet: 40.0,
-                desktop: 48.0,
-              )),
-
-              // CTA Buttons
-              FadeInSlide(
-                delay: const Duration(milliseconds: 900),
-                child: _buildCTAButtons(responsive),
-              ),
-
-              SizedBox(height: responsive.value(
-                mobile: 40.0,
-                tablet: 60.0,
-                desktop: 80.0,
-              )),
-
-              // Scroll Indicator
-              if (!responsive.isMobile)
-                FadeInSlide(
-                  delay: const Duration(milliseconds: 1200),
-                  child: _buildScrollIndicator(),
+          child: responsive.isDesktop || responsive.isLargeDesktop
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: _buildTextColumn(context, responsive, align: CrossAxisAlignment.start,
+                          textAlign: TextAlign.left),
+                    ),
+                    const SizedBox(width: 40),
+                    Expanded(
+                      flex: 5,
+                      child: FadeInSlide(
+                        delay: const Duration(milliseconds: 400),
+                        child: Center(child: HeroVisual(isDarkMode: widget.isDarkMode)),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildTextColumn(context, responsive),
+                    if (responsive.isTablet) ...[
+                      SizedBox(height: responsive.value(mobile: 40.0, tablet: 56.0)),
+                      FadeInSlide(
+                        delay: const Duration(milliseconds: 400),
+                        child: HeroVisual(isDarkMode: widget.isDarkMode, size: 300),
+                      ),
+                    ],
+                  ],
                 ),
-            ],
-          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextColumn(
+    BuildContext context,
+    Responsive responsive, {
+    CrossAxisAlignment align = CrossAxisAlignment.center,
+    TextAlign textAlign = TextAlign.center,
+  }) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: align,
+      children: [
+        // Status Badge
+        FadeInSlide(
+          delay: const Duration(milliseconds: 100),
+          child: _buildStatusBadge(),
+        ),
+
+        SizedBox(height: responsive.value(
+          mobile: 24.0,
+          tablet: 32.0,
+          desktop: 40.0,
+        )),
+
+        // Name
+        FadeInSlide(
+          delay: const Duration(milliseconds: 300),
+          child: _buildName(context, responsive, textAlign: textAlign),
+        ),
+
+        SizedBox(height: responsive.value(
+          mobile: 20.0,
+          tablet: 24.0,
+          desktop: 32.0,
+        )),
+
+        // Role Switcher
+        FadeInSlide(
+          delay: const Duration(milliseconds: 500),
+          child: _buildRoleSwitcher(context, responsive, textAlign: textAlign),
+        ),
+
+        SizedBox(height: responsive.value(
+          mobile: 20.0,
+          tablet: 24.0,
+          desktop: 32.0,
+        )),
+
+        // Description
+        FadeInSlide(
+          delay: const Duration(milliseconds: 700),
+          child: _buildDescription(context, responsive, textAlign: textAlign),
+        ),
+
+        SizedBox(height: responsive.value(
+          mobile: 32.0,
+          tablet: 40.0,
+          desktop: 48.0,
+        )),
+
+        // CTA Buttons
+        FadeInSlide(
+          delay: const Duration(milliseconds: 900),
+          child: _buildCTAButtons(responsive, align: align),
+        ),
+
+        SizedBox(height: responsive.value(
+          mobile: 40.0,
+          tablet: 60.0,
+          desktop: 80.0,
+        )),
+
+        // Scroll Indicator
+        if (!responsive.isMobile && align == CrossAxisAlignment.center)
+          FadeInSlide(
+            delay: const Duration(milliseconds: 1200),
+            child: _buildScrollIndicator(),
+          ),
+      ],
     );
   }
 
@@ -198,7 +240,7 @@ class _HeroSectionState extends State<HeroSection>
     );
   }
 
-  Widget _buildName(BuildContext context, Responsive responsive) {
+  Widget _buildName(BuildContext context, Responsive responsive, {TextAlign textAlign = TextAlign.center}) {
     return ShaderMask(
       shaderCallback: (bounds) => AppTheme.primaryGradient(widget.isDarkMode)
           .createShader(bounds),
@@ -209,12 +251,12 @@ class _HeroSectionState extends State<HeroSection>
                 ? AppTheme.displaySmall(widget.isDarkMode)
                 : AppTheme.displayLarge(widget.isDarkMode)
         ).copyWith(color: AppTheme.getTextPrimary(widget.isDarkMode)),
-        textAlign: TextAlign.center,
+        textAlign: textAlign,
       ),
     );
   }
 
-  Widget _buildRoleSwitcher(BuildContext context, Responsive responsive) {
+  Widget _buildRoleSwitcher(BuildContext context, Responsive responsive, {TextAlign textAlign = TextAlign.center}) {
     return GlassContainer(
       isDarkMode: widget.isDarkMode,
       padding: EdgeInsets.symmetric(
@@ -230,7 +272,7 @@ class _HeroSectionState extends State<HeroSection>
                   ? AppTheme.h4(widget.isDarkMode)
                   : AppTheme.h2(widget.isDarkMode)
           ).copyWith(fontWeight: FontWeight.w600),
-          textAlign: TextAlign.center,
+          textAlign: textAlign,
           child: AnimatedTextKit(
             repeatForever: true,
             pause: const Duration(milliseconds: 1000),
@@ -262,11 +304,13 @@ class _HeroSectionState extends State<HeroSection>
     );
   }
 
-  Widget _buildDescription(BuildContext context, Responsive responsive) {
+  Widget _buildDescription(BuildContext context, Responsive responsive, {TextAlign textAlign = TextAlign.center}) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: responsive.value(mobile: 16.0, tablet: 48.0, desktop: 80.0),
-      ),
+      padding: textAlign == TextAlign.center
+          ? EdgeInsets.symmetric(
+              horizontal: responsive.value(mobile: 16.0, tablet: 48.0, desktop: 80.0),
+            )
+          : EdgeInsets.zero,
       child: Text(
         'Creating beautiful, responsive, and high-performance Flutter apps with clean code, thoughtful design, and cross-platform reliability',
         style: context.scaleText(
@@ -274,16 +318,16 @@ class _HeroSectionState extends State<HeroSection>
                 ? AppTheme.bodyMedium(widget.isDarkMode)
                 : AppTheme.bodyLarge(widget.isDarkMode)
         ),
-        textAlign: TextAlign.center,
+        textAlign: textAlign,
       ),
     );
   }
 
-  Widget _buildCTAButtons(Responsive responsive) {
+  Widget _buildCTAButtons(Responsive responsive, {CrossAxisAlignment align = CrossAxisAlignment.center}) {
     return Wrap(
       spacing: 16,
       runSpacing: 16,
-      alignment: WrapAlignment.center,
+      alignment: align == CrossAxisAlignment.start ? WrapAlignment.start : WrapAlignment.center,
       children: [
         GradientButton(
           text: 'Download CV',
@@ -333,7 +377,8 @@ class _HeroSectionState extends State<HeroSection>
   }
 
   void _downloadCV() async {
-    const url = 'https://drive.google.com/file/d/1T9WCbIbGLkXelFuyK8Tyjqzc0VMoVfxj/view?usp=sharing';
+    const url = 'https://drive.google.com/file/d/1tk5AwsL_CQOHponlzWGt90VJxRHIoy7E/view?usp=sharing';
+    // const url = 'https://drive.google.com/file/d/1T9WCbIbGLkXelFuyK8Tyjqzc0VMoVfxj/view?usp=sharing';
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);

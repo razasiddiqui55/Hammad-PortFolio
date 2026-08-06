@@ -43,6 +43,21 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
     super.dispose();
   }
 
+  // Groups the existing skill data into named categories for a more
+  // scannable, "senior developer" presentation. No skills are added or
+  // removed — this only organizes what's already in SkillModel.
+  static const Map<String, List<String>> _categories = {
+    'Flutter & Architecture': ['Flutter & Dart', 'Clean Architecture', 'UI/UX Design'],
+    'State & Backend': ['State Management', 'Firebase Integration', 'REST APIs'],
+    'Payments & Tooling': ['Stripe Payment', 'CI/CD', 'Git & GitHub', 'Shared Preferences'],
+  };
+
+  static const Map<String, IconData> _categoryIcons = {
+    'Flutter & Architecture': Icons.widgets_rounded,
+    'State & Backend': Icons.cloud_sync_rounded,
+    'Payments & Tooling': Icons.build_circle_rounded,
+  };
+
   @override
   Widget build(BuildContext context) {
     final skills = SkillModel.getSkills();
@@ -61,27 +76,44 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
 
           const SizedBox(height: 60),
 
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: responsive.isMobile ? 1 : 2,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 24,
-              childAspectRatio: responsive.isMobile ? 2.5 : 3,
-            ),
-            itemCount: skills.length,
-            itemBuilder: (context, index) {
-              return _AnimatedSkillCard(
-                skill: skills[index],
-                index: index,
-                isVisible: _isVisible,
-                isDarkMode: widget.isDarkMode,
-              );
-            },
-          ),
+          ..._categories.entries.map((entry) {
+            final categorySkills = skills
+                .where((s) => entry.value.contains(s.name))
+                .toList();
+            if (categorySkills.isEmpty) return const SizedBox.shrink();
 
-          const SizedBox(height: 100),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildCategoryLabel(entry.key, _categoryIcons[entry.key] ?? Icons.star_rounded),
+                  const SizedBox(height: 20),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: responsive.isMobile ? 1 : 2,
+                      crossAxisSpacing: 24,
+                      mainAxisSpacing: 24,
+                      childAspectRatio: responsive.isMobile ? 2.5 : 3,
+                    ),
+                    itemCount: categorySkills.length,
+                    itemBuilder: (context, index) {
+                      return _AnimatedSkillCard(
+                        skill: categorySkills[index],
+                        index: index,
+                        isVisible: _isVisible,
+                        isDarkMode: widget.isDarkMode,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          }),
+
+          const SizedBox(height: 60),
 
           AnimatedOpacity(
             opacity: _isVisible ? 1.0 : 0.0,
@@ -182,6 +214,38 @@ class _SkillsSectionState extends State<SkillsSection> with TickerProviderStateM
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCategoryLabel(String label, IconData icon) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            gradient: AppTheme.primaryGradient(widget.isDarkMode),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.getPrimary(widget.isDarkMode).withOpacity(0.3),
+                blurRadius: 12,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Icon(icon, color: Colors.white, size: 18),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.3,
+            color: AppTheme.getTextPrimary(widget.isDarkMode),
+          ),
+        ),
+      ],
     );
   }
 }
