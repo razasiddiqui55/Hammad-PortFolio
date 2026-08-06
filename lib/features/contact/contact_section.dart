@@ -606,7 +606,7 @@ class _ContactSectionState extends State<ContactSection> {
   }
 
   Widget _buildSocialButton(
-      IconData icon,
+      FaIconData icon,
       String label,
       Color color,
       String url,

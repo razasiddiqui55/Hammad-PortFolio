@@ -293,7 +293,7 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
     }).toList();
   }
 
-  Widget _buildStatCard(BuildContext context, String value, String label, IconData icon) {
+  Widget _buildStatCard(BuildContext context, String value, String label, FaIconData icon) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
@@ -320,7 +320,7 @@ class _AboutSectionState extends State<AboutSection> with SingleTickerProviderSt
         ),
         child: Column(
           children: [
-            Icon(icon, color: AppTheme.getTextPrimary(widget.isDarkMode), size: 24),
+            FaIcon(icon, color: AppTheme.getTextPrimary(widget.isDarkMode), size: 24),
             const SizedBox(height: 8),
             Text(
                 value,

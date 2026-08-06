@@ -244,7 +244,7 @@ class _AppNavigationState extends State<AppNavigation> {
     );
   }
 
-  Widget _buildSocialIcon(IconData icon, String url) {
+  Widget _buildSocialIcon(FaIconData icon, String url) {
     return InkWell(
       onTap: () => _launchURL(url),
       borderRadius: BorderRadius.circular(AppTheme.radiusSm),
@@ -263,7 +263,7 @@ class _AppNavigationState extends State<AppNavigation> {
             width: 1,
           ),
         ),
-        child: Icon(
+        child: FaIcon(
           icon,
           size: 16,
           color: AppTheme.getTextPrimary(widget.isDarkMode),
@@ -406,7 +406,7 @@ class _AppNavigationState extends State<AppNavigation> {
     );
   }
 
-  Widget _buildMobileSocialButton(IconData icon, String label, String url) {
+  Widget _buildMobileSocialButton(FaIconData icon, String label, String url) {
     return InkWell(
       onTap: () => _launchURL(url),
       borderRadius: BorderRadius.circular(AppTheme.radiusMd),
@@ -423,7 +423,7 @@ class _AppNavigationState extends State<AppNavigation> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 18, color: AppTheme.getTextPrimary(widget.isDarkMode)),
+            FaIcon(icon, size: 18, color: AppTheme.getTextPrimary(widget.isDarkMode)),
             const SizedBox(width: 8),
             Text(
               label,
